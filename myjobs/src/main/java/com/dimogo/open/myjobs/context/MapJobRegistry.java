@@ -30,7 +30,6 @@ public class MapJobRegistry implements JobRegistry {
         synchronized (map) {
             map.remove(name);
         }
-
     }
 
     public Job getJob(String name) throws NoSuchJobException {
