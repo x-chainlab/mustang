@@ -1,3 +1,4 @@
 myjobs/target/*
+hello-jar/target/*
 **/*.iml
 **/*.idea/*
