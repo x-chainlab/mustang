@@ -21,7 +21,10 @@
 
 	<bean id="jobLauncher" class="org.springframework.batch.core.launch.support.SimpleJobLauncher">
 		<property name="jobRepository" ref="jobRepository" />
-		<property name="taskExecutor" ref="jobLauncherTaskExecutor" />
+		<!--<property name="taskExecutor" ref="jobLauncherTaskExecutor" />-->
+        <property name="taskExecutor">
+            <bean class="org.springframework.core.task.SimpleAsyncTaskExecutor"/>
+        </property>
 	</bean>
 
 	<task:executor id="jobLauncherTaskExecutor" pool-size="6" rejection-policy="ABORT" />
@@ -67,13 +70,13 @@
 	<bean id="jobLoader" class="org.springframework.batch.core.configuration.support.AutomaticJobRegistrar">
 		<property name="applicationContextFactories" ref="applicationContextFactories"/>
 		<property name="jobLoader">
-			<bean class="com.dimogo.open.myjobs.context.MapJobLoader">
+			<bean class="com.dimogo.open.myjobs.context.MyJobLoader">
 				<property name="jobRegistry" ref="jobRegistry" />
 			</bean>
 		</property>
 	</bean>
 
-	<bean id="jobRegistry" class="com.dimogo.open.myjobs.context.MapJobRegistry" />
+	<bean id="jobRegistry" class="com.dimogo.open.myjobs.context.MyJobRegistry" />
 
 	<bean id="jobService" class="org.springframework.batch.admin.service.SimpleJobServiceFactoryBean">
 		<property name="jobRepository" ref="jobRepository" />

@@ -5,24 +5,58 @@
 			http://java.sun.com/xml/ns/j2ee/web-app_2_4.xsd" version="2.4">
     <display-name>myjobs</display-name>
 
-    <!--
+    <context-param>
+        <param-name>contextConfigLocation</param-name>
+        <param-value>classpath*:/org/springframework/batch/admin/web/resources/webapp-config.xml</param-value>
+    </context-param>
+
     <listener>
         <listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
     </listener>
-    -->
+
+    <listener>
+        <listener-class>com.dimogo.open.myjobs.listener.InitSystemListener</listener-class>
+    </listener>
+
+    <filter>
+        <filter-name>shallowEtagHeaderFilter</filter-name>
+        <filter-class>org.springframework.web.filter.ShallowEtagHeaderFilter</filter-class>
+    </filter>
+
+    <filter>
+        <filter-name>hiddenHttpMethodFilter</filter-name>
+        <filter-class>org.springframework.web.filter.HiddenHttpMethodFilter</filter-class>
+    </filter>
+
+    <filter-mapping>
+        <filter-name>shallowEtagHeaderFilter</filter-name>
+        <url-pattern>/batch/*</url-pattern>
+    </filter-mapping>
+
+    <filter-mapping>
+        <filter-name>hiddenHttpMethodFilter</filter-name>
+        <url-pattern>/batch/*</url-pattern>
+    </filter-mapping>
+
     <servlet>
-        <servlet-name>myjobs-batch-servlet</servlet-name>
+        <servlet-name>Batch Servlet</servlet-name>
         <servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
         <init-param>
             <param-name>contextConfigLocation</param-name>
-            <param-value>classpath*:/org/springframework/batch/admin/web/resources/servlet-config.xml,classpath*:/org/springframework/batch/admin/web/resources/webapp-config.xml</param-value>
+            <param-value>classpath*:/org/springframework/batch/admin/web/resources/servlet-config.xml</param-value>
         </init-param>
         <load-on-startup>1</load-on-startup>
     </servlet>
 
     <servlet-mapping>
-        <servlet-name>myjobs-batch-servlet</servlet-name>
+        <servlet-name>Batch Servlet</servlet-name>
         <url-pattern>/batch/*</url-pattern>
     </servlet-mapping>
+
+    <servlet>
+        <servlet-name>Application Context Catch Servlet</servlet-name>
+        <servlet-class>com.dimogo.open.myjobs.servlet.ApplicationContextCatchServlet</servlet-class>
+        <load-on-startup>1</load-on-startup>
+    </servlet>
 
 </web-app>
