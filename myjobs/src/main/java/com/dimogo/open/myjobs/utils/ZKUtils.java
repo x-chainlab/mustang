@@ -59,6 +59,10 @@ public class ZKUtils {
 		return Path.Jobs.build() + "/" + job;
 	}
 
+	public static String buildJobParasPath(String job) {
+		return buildJobPath(job) + "/paras";
+	}
+
 	public static String buildJobExecutorsPath(String job) {
 		return Path.Jobs.build() + "/" + job + "/executors";
 	}
@@ -77,6 +81,14 @@ public class ZKUtils {
 
 	public static String buildJobExecutionPath(String job, String id) {
 		return buildJobExecutionsPath(job) + "/" + id;
+	}
+
+	public static String buildJobInstancesPath(String job) {
+		return buildJobPath(job) + "/instances";
+	}
+
+	public static int countJobExecutions(ZkClient zkClient, String job) {
+		return zkClient.countChildren(buildJobExecutionsPath(job));
 	}
 
 }

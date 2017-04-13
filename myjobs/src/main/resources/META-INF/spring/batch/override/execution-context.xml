@@ -19,7 +19,8 @@
 		<property name="proxyTargetClass" value="true"/>
 	</bean>
 
-	<bean id="jobLauncher" class="org.springframework.batch.core.launch.support.SimpleJobLauncher">
+	<!--<bean id="jobLauncher" class="org.springframework.batch.core.launch.support.SimpleJobLauncher">-->
+	<bean id="jobLauncher" class="com.dimogo.open.myjobs.context.MyJobLauncher">
 		<property name="jobRepository" ref="jobRepository" />
 		<!--<property name="taskExecutor" ref="jobLauncherTaskExecutor" />-->
         <property name="taskExecutor">

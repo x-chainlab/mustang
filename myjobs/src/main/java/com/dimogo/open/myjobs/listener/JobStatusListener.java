@@ -38,13 +38,9 @@ public class JobStatusListener implements JobExecutionListener {
 				throw new RuntimeException("before job exception", e);
 			}
 		}
-
-		System.out.println("before job " + jobExecution.getStatus() + " " + jobExecution.getExitStatus());
 	}
 
-	public synchronized void afterJob(JobExecution jobExecution) {
-		System.out.println("after job " + jobExecution.getStatus() + " " + jobExecution.getExitStatus());
-
+	public void afterJob(JobExecution jobExecution) {
 		synchronized (this) {
 			UUID executionId = (UUID) jobExecution.getExecutionContext().get(EXECUTION_ID);
 			try {
