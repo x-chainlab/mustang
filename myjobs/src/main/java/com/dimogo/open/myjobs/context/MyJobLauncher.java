@@ -1,7 +1,7 @@
 package com.dimogo.open.myjobs.context;
 
 import com.dimogo.open.myjobs.utils.JobInstanceUtils;
-import com.dimogo.open.myjobs.utils.ParasUtils;
+import com.dimogo.open.myjobs.utils.JobUtils;
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.JobExecution;
 import org.springframework.batch.core.JobParameters;
@@ -23,7 +23,7 @@ public class MyJobLauncher extends SimpleJobLauncher {
 		if (jobParameters.getString("mergeJobParas", "true").equalsIgnoreCase("true")) {
 			//merge job parameter
 			try {
-				jobParameters = ParasUtils.mergeConfParas(job.getName(), jobParameters);
+				jobParameters = JobUtils.mergeConfJobParas(job.getName(), jobParameters);
 			} catch (Throwable e) {
 				e.printStackTrace();
 			}

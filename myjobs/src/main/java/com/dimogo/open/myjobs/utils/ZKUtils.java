@@ -16,6 +16,8 @@ public class ZKUtils {
 		MyJobs("/myjobs", Root),
 		Jobs("/jobs", MyJobs),
 		Executors("/executors", MyJobs),
+		Master("/master", MyJobs),
+		MasterNode("/node", Master),
 		;
 
 		private String path;
@@ -63,6 +65,10 @@ public class ZKUtils {
 		return buildJobPath(job) + "/paras";
 	}
 
+	public static String buildJobCronPath(String job) {
+		return buildJobPath(job) + "/cron";
+	}
+
 	public static String buildJobExecutorsPath(String job) {
 		return Path.Jobs.build() + "/" + job + "/executors";
 	}
@@ -89,6 +95,52 @@ public class ZKUtils {
 
 	public static int countJobExecutions(ZkClient zkClient, String job) {
 		return zkClient.countChildren(buildJobExecutionsPath(job));
+	}
+
+	public static class ZkExclusiveLock {
+
+		private ZkClient zkClient;
+
+		public ZkExclusiveLock() {
+			this.zkClient = newClient();
+		}
+
+		public void unlock() {
+			try {
+				this.zkClient.close();
+			} catch (Throwable e) {
+
+			}
+		}
+
+		public ZkClient getZkClient() {
+			return zkClient;
+		}
+
+		public boolean lock(String lockPath, String lockedPath) {
+			return tryLock(lockPath, lockedPath, -1);
+		}
+
+		public boolean tryLock(String lockPath, String lockedPath, long timeout) {
+			try {
+				final long exp = timeout > 0 ? System.currentTimeMillis() + timeout : -1;
+				while (exp == -1 || System.currentTimeMillis() < exp) {
+					try {
+						create(zkClient, lockPath, null, CreateMode.PERSISTENT);
+						zkClient.createEphemeral(lockedPath, ID.ExecutorID);
+						return true;
+					} catch (Throwable e) {
+						if (e instanceof ZkNodeExistsException) {
+							zkClient.watchForChilds(lockPath);
+						}
+						throw e;
+					}
+				}
+				return false;
+			} catch (Throwable e) {
+				throw new RuntimeException("trying to lock path " + lockPath + " exception", e);
+			}
+		}
 	}
 
 }

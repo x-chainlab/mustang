@@ -13,10 +13,10 @@ import java.util.Map;
 /**
  * Created by Ethan Xiao on 2017/4/7.
  */
-public class ParasUtils {
+public class JobUtils {
 
-	public static JobParameters mergeConfParas(String job, JobParameters jobParameters) {
-		String paras = loadParas(job);
+	public static JobParameters mergeConfJobParas(String job, JobParameters jobParameters) {
+		String paras = loadConfJobParas(job);
 		if (StringUtils.isBlank(paras)) {
 			return jobParameters;
 		}
@@ -31,7 +31,7 @@ public class ParasUtils {
 		return new JobParameters(userParas);
 	}
 
-	public static String loadParas(String job) {
+	public static String loadConfJobParas(String job) {
 		ZkClient zkClient = ZKUtils.newClient();
 		try {
 			String data = zkClient.readData(ZKUtils.buildJobParasPath(job), true);
@@ -41,7 +41,7 @@ public class ParasUtils {
 		}
 	}
 
-	public static void setParas(String job, String paras) {
+	public static void setConfJobParas(String job, String paras) {
 		ZkClient zkClient = ZKUtils.newClient();
 		try {
 			String path = ZKUtils.buildJobParasPath(job);
@@ -50,6 +50,29 @@ public class ParasUtils {
 				return;
 			}
 			zkClient.create(path, paras, CreateMode.PERSISTENT);
+		} finally {
+			zkClient.close();
+		}
+	}
+
+	public static void setJobCronExpression(String job, String cronExpression) {
+		ZkClient zkClient = ZKUtils.newClient();
+		try {
+			String path = ZKUtils.buildJobCronPath(job);
+			if (zkClient.exists(path)) {
+				zkClient.writeData(path, cronExpression);
+				return;
+			}
+			zkClient.create(path, cronExpression, CreateMode.PERSISTENT);
+		} finally {
+			zkClient.close();
+		}
+	}
+
+	public static void cleanJobCronExpression(String job) {
+		ZkClient zkClient = ZKUtils.newClient();
+		try {
+			zkClient.delete(ZKUtils.buildJobCronPath(job));
 		} finally {
 			zkClient.close();
 		}

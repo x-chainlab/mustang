@@ -1,5 +1,6 @@
 package com.dimogo.open.myjobs.listener;
 
+import com.dimogo.open.myjobs.quartz.MyJobMaster;
 import com.dimogo.open.myjobs.utils.ZKUtils;
 import org.I0Itec.zkclient.ZkClient;
 import org.apache.zookeeper.CreateMode;
@@ -21,6 +22,9 @@ public class InitSystemListener implements ServletContextListener {
 			ZKUtils.create(zkClient, ZKUtils.Path.Jobs.build(), null, CreateMode.PERSISTENT);
 			ZKUtils.create(zkClient, ZKUtils.Path.Executors.build(), null, CreateMode.PERSISTENT);
 			zkClient.createEphemeral(ZKUtils.buildExecutorIDPath());
+
+			Thread masterThread = new Thread(new MyJobMaster());
+			masterThread.start();
 		} catch (Throwable e) {
 			e.printStackTrace();
 		}
