@@ -16,6 +16,7 @@ public class ZKUtils {
 		MyJobs("/myjobs", Root),
 		Jobs("/jobs", MyJobs),
 		Executors("/executors", MyJobs),
+		Notifications("/notifications", MyJobs),
 		Master("/master", MyJobs),
 		MasterNode("/node", Master),
 		;
@@ -67,6 +68,14 @@ public class ZKUtils {
 
 	public static String buildJobCronPath(String job) {
 		return buildJobPath(job) + "/cron";
+	}
+
+	public static String buildNotificationPath(String notification) {
+		return Path.Notifications.build() + "/" + notification;
+	}
+
+	public static String buildNotificationLockPath(String notification) {
+		return buildNotificationPath(notification) + "/locked";
 	}
 
 	public static String buildJobExecutorsPath(String job) {

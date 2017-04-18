@@ -2,14 +2,13 @@ package com.dimogo.open.myjobs.context;
 
 import com.dimogo.open.myjobs.utils.JobInstanceUtils;
 import com.dimogo.open.myjobs.utils.JobUtils;
-import org.springframework.batch.core.Job;
-import org.springframework.batch.core.JobExecution;
-import org.springframework.batch.core.JobParameters;
-import org.springframework.batch.core.JobParametersInvalidException;
+import org.springframework.batch.core.*;
 import org.springframework.batch.core.launch.support.SimpleJobLauncher;
 import org.springframework.batch.core.repository.JobExecutionAlreadyRunningException;
 import org.springframework.batch.core.repository.JobInstanceAlreadyCompleteException;
 import org.springframework.batch.core.repository.JobRestartException;
+
+import java.util.Map;
 
 /**
  * Created by Ethan Xiao on 2017/4/3.
@@ -25,8 +24,13 @@ public class MyJobLauncher extends SimpleJobLauncher {
 			try {
 				jobParameters = JobUtils.mergeConfJobParas(job.getName(), jobParameters);
 			} catch (Throwable e) {
-				e.printStackTrace();
+				throw new JobRestartException("merge job parameters error");
 			}
+		}
+		if (jobParameters.getString("signTriggerTime", "true").equalsIgnoreCase("true")) {
+			Map<String, JobParameter> paras = jobParameters.getParameters();
+			paras.put("signTriggerTime", new JobParameter(System.currentTimeMillis()));
+			jobParameters = new JobParameters(paras);
 		}
 		return super.run(job, jobParameters);
 	}

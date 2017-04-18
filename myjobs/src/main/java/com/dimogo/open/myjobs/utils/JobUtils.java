@@ -77,4 +77,22 @@ public class JobUtils {
 			zkClient.close();
 		}
 	}
+
+	public static void sendJobNotification(String job, String notification, Object data) throws Exception {
+		ZkClient zkClient = ZKUtils.newClient();
+		try {
+			zkClient.create(ZKUtils.buildNotificationPath(notification), data, CreateMode.PERSISTENT_SEQUENTIAL);
+		} finally {
+			zkClient.close();
+		}
+	}
+
+	public static void deleteJobNotification(String job, String notification) {
+		ZkClient zkClient = ZKUtils.newClient();
+		try {
+			zkClient.delete(ZKUtils.buildNotificationPath(notification));
+		} finally {
+			zkClient.close();
+		}
+	}
 }

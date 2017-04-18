@@ -15,7 +15,7 @@ public class HelloTasklet implements Tasklet {
 		JobUtils.setConfJobParas("hello.tasklet","{x:1}");
 		JobUtils.setJobCronExpression("hello.tasklet", "0 0/1 * * * ?  ");
 		JobInstanceUtils.setInstances("hello.tasklet", 1);
-//		Thread.sleep(60000);
+		Thread.sleep(3 * 60 * 1000);
 		System.out.println("Hello Tasklet, My Jobs");
 		return null;
 	}

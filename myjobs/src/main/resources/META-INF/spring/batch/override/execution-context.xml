@@ -88,6 +88,12 @@
 		<property name="transactionManager" ref="transactionManager"/>
 	</bean>
 
+	<bean id="runJobDispatcher" class="com.dimogo.open.myjobs.dispatch.RunJobDispatcher">
+		<property name="jobLocator" ref="jobRegistry" />
+		<property name="jobLauncher" ref="jobLauncher" />
+		<property name="jobRepository" ref="jobRepository" />
+	</bean>
+
 	<bean id="jobBuilderFactory" class="org.springframework.batch.core.configuration.annotation.JobBuilderFactory">
 		<constructor-arg ref="jobRepository"/>
 	</bean>
