@@ -29,8 +29,11 @@ public class MyJobLauncher extends SimpleJobLauncher {
 		}
 		if (jobParameters.getString("signTriggerTime", "true").equalsIgnoreCase("true")) {
 			Map<String, JobParameter> paras = jobParameters.getParameters();
-			paras.put("signTriggerTime", new JobParameter(System.currentTimeMillis()));
+			paras.put("signTriggerTime", new JobParameter(String.valueOf(System.currentTimeMillis())));
 			jobParameters = new JobParameters(paras);
+		}
+		if (job.getJobParametersIncrementer() != null) {
+			jobParameters = job.getJobParametersIncrementer().getNext(jobParameters);
 		}
 		return super.run(job, jobParameters);
 	}
