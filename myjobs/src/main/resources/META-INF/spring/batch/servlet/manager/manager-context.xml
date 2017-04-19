@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+                                 http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+	<bean class="com.dimogo.open.myjobs.manager.admin.menu.ClusteredJobs" parent="baseMenu"/>
+	<bean class="com.dimogo.open.myjobs.manager.admin.menu.Executors" parent="baseMenu"/>
+	<bean class="com.dimogo.open.myjobs.manager.admin.menu.Master" parent="baseMenu"/>
+	<bean class="com.dimogo.open.myjobs.manager.admin.menu.Notifications" parent="baseMenu"/>
+
+	<bean name="executors" parent="standard">
+		<property name="attributes">
+			<props merge="true">
+				<prop key="body">/manager/executors/html/executors.ftl</prop>
+				<prop key="titleCode">myjobs.executors.title</prop>
+				<prop key="titleText">MyJobs Batch Admin: Executors</prop>
+			</props>
+		</property>
+	</bean>
+
+	<bean name="master" parent="standard">
+		<property name="attributes">
+			<props merge="true">
+				<prop key="body">/manager/jobs/html/jobs.ftl</prop>
+				<prop key="titleCode">myjobs.master.title</prop>
+				<prop key="titleText">MyJobs Batch Admin: MyJobs Master</prop>
+			</props>
+		</property>
+	</bean>
+
+	<bean name="clusteredjobs" parent="standard">
+		<property name="attributes">
+			<props merge="true">
+				<prop key="body">/manager/clusteredjobs/html/clusteredJobs.ftl</prop>
+				<prop key="titleCode">myjobs.clusteredjobs.title</prop>
+				<prop key="titleText">MyJobs Batch Admin: All Jobs</prop>
+			</props>
+		</property>
+	</bean>
+
+	<bean name="notifications" parent="standard">
+		<property name="attributes">
+			<props merge="true">
+				<prop key="body">/manager/notifications/html/notifications.ftl</prop>
+				<prop key="titleCode">myjobs.notifications.title</prop>
+				<prop key="titleText">MyJobs Batch Admin: Notifications</prop>
+			</props>
+		</property>
+	</bean>
+
+</beans>
+

@@ -4,7 +4,7 @@
                                  http://www.springframework.org/schema/beans/spring-beans.xsd">
 
 	<bean id="resourceService" class="org.springframework.batch.admin.web.resources.DefaultResourceService">
-		<property name="servletPath" value="/batch"/>
+		<!--<property name="servletPath" value="/batch"/>-->
 	</bean>
 
 </beans>

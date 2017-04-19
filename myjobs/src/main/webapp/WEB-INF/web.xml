@@ -50,7 +50,7 @@
 
     <servlet-mapping>
         <servlet-name>Batch Servlet</servlet-name>
-        <url-pattern>/batch/*</url-pattern>
+        <url-pattern>/*</url-pattern>
     </servlet-mapping>
 
     <servlet>
