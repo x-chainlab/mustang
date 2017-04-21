@@ -24,12 +24,6 @@ public class InitSystemListener implements ServletContextListener {
 			ZKUtils.create(zkClient, ZKUtils.Path.Executors.build(), null, CreateMode.PERSISTENT);
 			ZKUtils.create(zkClient, ZKUtils.Path.Notifications.build(), null, CreateMode.PERSISTENT);
 			zkClient.createEphemeral(ZKUtils.buildExecutorIDPath());
-
-			Thread masterThread = new Thread(new MyJobMaster());
-			masterThread.start();
-
-			Thread slaveThread = new Thread(new MyJobSlave());
-			slaveThread.start();
 		} catch (Throwable e) {
 			e.printStackTrace();
 		}
