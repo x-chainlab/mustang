@@ -7,6 +7,7 @@ import java.io.Serializable;
  */
 public class JobExecutionDTO implements Serializable {
 	private String executorId;
+	private String executionId;
 	private String jobName;
 	private Long jobId;
 	private long jobInstanceId;
@@ -41,5 +42,13 @@ public class JobExecutionDTO implements Serializable {
 
 	public void setJobInstanceId(long jobInstanceId) {
 		this.jobInstanceId = jobInstanceId;
+	}
+
+	public String getExecutionId() {
+		return executionId;
+	}
+
+	public void setExecutionId(String executionId) {
+		this.executionId = executionId;
 	}
 }

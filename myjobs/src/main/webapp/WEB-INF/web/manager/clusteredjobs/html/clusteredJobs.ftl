@@ -21,7 +21,7 @@
 						<#assign rowClass="name-sublevel1-odd"/>
 					</#if>
 					<tr class="${rowClass}">
-						<#assign job_url><@spring.url relativeUrl="${servletPath}/jobs/${job.jobName}"/></#assign>
+						<#assign job_url><@spring.url relativeUrl="${servletPath}/clusteredjob/${job.jobName}/"/></#assign>
 						<td><a href="${job_url}">${job.jobName}</a></td>
 						<td>${job.executors}</td>
 						<td>${job.executions}</td>

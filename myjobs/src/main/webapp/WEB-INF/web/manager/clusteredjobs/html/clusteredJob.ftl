@@ -1,42 +1,76 @@
+<#import "/spring.ftl" as spring />
 <#escape x as x?html>
-<#if jobInfo?? && jobInfo.launchable>
-	<p/>
-	<#assign launch_url><@spring.url relativeUrl="${servletPath}/jobs/${jobInfo.name}"/></#assign>
-	<form id="launchForm" action="${launch_url}" method="POST">
+<h2>Clustered Job Configurations</h2>
+<div id="job">
+    <#if jobInfo??>
+        <p/>
+        <#assign details_url><@spring.url relativeUrl="${servletPath}/clusteredjob/${jobInfo.jobName}/"/></#assign>
+        <form id="detailForm" action="${details_url}" method="POST" enctype="application/x-www-form-urlencoded">
+            <ol>
+                <li><label for="jobName">Job Name</label><input readonly type="text" name="jobName" id="jobName" value="${jobInfo.jobName}"></li>
+                <li><label for="jobExecutors">Job Executors</label><span id="jobExecutors">${jobInfo.executors}</span></li>
+                <li><label for="jobExecutions">Job Executions</label><span id="jobExecutions">${jobInfo.executions}</span></li>
+                <li><label for="cronExpression">Cron Expression</label><input type="text" id="cronExpression" name="cron" value="${jobInfo.cron}"></li>
+                <li><label for="maxInstances">Instance Limit</label><input type="number" id="maxInstances" name="maxInstances" value="${jobInfo.maxInstances}"></li>
+                <li><label for="jobParameters">Job Parameters (key=value
+                    pairs)</label><textarea id="jobParameters" name="paras"
+                                            class="jobParameters"><#if jobParameters??>${jobParameters}</#if></textarea>
+                </li>
+                <li><label>Settings</label><input id="saveSettings" type="submit" value="Save Settings"/>
+                    <input type="hidden" name="origin" value="clusteredjob"/>
+                </li>
+            </ol>
+        </form>
+        <br/>
+        <p>Job Executions:</p>
+        <table class="bordered-table">
+            <tr>
+                <th>Execution</th>
+                <th>Executor</th>
+                <th>Job&nbsp;ID</th>
+                <th>Job&nbsp;Instance&nbsp;ID</th>
+            </tr>
+            <#list jobExecutions as execution>
+                <#if execution_index % 2 == 0>
+                    <#assign rowClass="name-sublevel1-even"/>
+                <#else>
+                    <#assign rowClass="name-sublevel1-odd"/>
+                </#if>
+                <tr class="${rowClass}">
+                    <td>${execution.executionId}</a></td>
+                    <td>${execution.executorId}</td>
+                    <td>${execution.jobId}</td>
+                    <td>${execution.jobInstanceId}</td>
+                </tr>
+            </#list>
+        </table>
 
-		<#if launchRequest??>
-			<@spring.bind path="launchRequest" />
-			<@spring.showErrors separator="<br/>" classOrStyle="error" /><br/>
-		</#if>
-
-		<label for="launch">Job name=${jobInfo.name}</label><input id="launch" type="submit" value="Launch" name="launch" />
-		<ol>
-			<li><label for="jobParameters">Job Parameters (key=value
-			pairs)</label><textarea id="jobParameters" name="jobParameters" class="jobParameters"><#if jobParameters??>${jobParameters}</#if></textarea> 
-			(<#if jobInfo.incrementable>Incrementable<#else>Not incrementable</#if>)</li>
-		</ol>
-
-		<br/><#if jobInfo.incrementable>
-		<p>If the parameters are marked as "Incrementable" then the launch button launches either the <em>next</em>
-		instance of the job in the sequence defined by the incrementer, or if the last execution failed it restarts it.
-		The old parameters are shown above, and they will passed into the configured incrementer. You can always add
-		new parameters if you want to (but not to a restart).</p>
-		<#else>
-		<p>If the parameters are marked as "Not incrementable" then the launch button launches an
-		instance of the job with the parameters shown (which might be a restart if the last execution failed).
-		You can always add new parameters if you want to (but not if you want to restart).</p>
-		</#if>
-
-		<input type="hidden" name="origin" value="job"/>
-	</form>
-	<script type="text/javascript">
-		<#assign message><@spring.messageText code="invalid.job.parameters" text="Invalid Job Parameters (use comma or new-line separator)"/></#assign>
-		$.validator.addMethod('jobParameters', function (value) { 
-		    return !value || /([\w\.-_\)\(]+=[^,\n]*[,\n])*([\w\.-_\)\(]+=[^,]*$)/m.test(value); 
-		}, '${message}');
-		$(function(){
-		   $("#launchForm").validate();
-		});
-	</script>
-</#if>
+        <br/>
+        <p>Job Executors:</p>
+        <table class="bordered-table">
+            <tr>
+                <th>Executor</th>
+            </tr>
+            <#list jobExecutors as executor>
+                <#if executor_index % 2 == 0>
+                    <#assign rowClass="name-sublevel1-even"/>
+                <#else>
+                    <#assign rowClass="name-sublevel1-odd"/>
+                </#if>
+                <tr class="${rowClass}">
+                    <td>${executor.id}</td>
+                </tr>
+            </#list>
+        </table>
+        <script type="text/javascript">
+                <#assign message><@spring.messageText code="invalid.job.parameters" text="Invalid Job Parameters (use comma or new-line separator)"/></#assign>
+            $.validator.addMethod('jobParameters', function (value) {
+                return !value || /([\w\.-_\)\(]+=[^,\n]*[,\n])*([\w\.-_\)\(]+=[^,]*$)/m.test(value);
+            }, '${message}');
+            $(function () {
+                $("#detailForm").validate();
+            });
+        </script>
+    </#if>
+</div>
 </#escape>

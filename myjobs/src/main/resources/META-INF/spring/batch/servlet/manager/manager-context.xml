@@ -38,6 +38,16 @@
 		</property>
 	</bean>
 
+	<bean name="clusteredjob" parent="standard">
+		<property name="attributes">
+			<props merge="true">
+				<prop key="body">/manager/clusteredjobs/html/clusteredJob.ftl</prop>
+				<prop key="titleCode">myjobs.clusteredjob.title</prop>
+				<prop key="titleText">MyJobs Batch Admin: Job Details</prop>
+			</props>
+		</property>
+	</bean>
+
 	<bean name="notifications" parent="standard">
 		<property name="attributes">
 			<props merge="true">

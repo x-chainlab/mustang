@@ -3,15 +3,22 @@ package com.dimogo.open.myjobs.manager.admin.service.impl;
 import com.alibaba.fastjson.JSON;
 import com.dimogo.open.myjobs.dto.ClusteredJobInfo;
 import com.dimogo.open.myjobs.dto.ExecutorInfo;
+import com.dimogo.open.myjobs.dto.JobExecutionDTO;
 import com.dimogo.open.myjobs.dto.NotificationInfo;
+import com.dimogo.open.myjobs.exception.JobRegisterException;
 import com.dimogo.open.myjobs.manager.admin.service.MyJobsService;
+import com.dimogo.open.myjobs.utils.ID;
+import com.dimogo.open.myjobs.utils.JobUtils;
 import com.dimogo.open.myjobs.utils.ListUtils;
 import com.dimogo.open.myjobs.utils.ZKUtils;
 import org.I0Itec.zkclient.ZkClient;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.MapUtils;
+import org.apache.commons.lang3.StringUtils;
+import org.apache.zookeeper.CreateMode;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
@@ -118,5 +125,65 @@ public class MyJobsServiceImpl implements MyJobsService {
 
 	public int countNotifications() {
 		return zkClient.countChildren(ZKUtils.Path.Notifications.build());
+	}
+
+	public ClusteredJobInfo findJob(String jobName) {
+		int executors = zkClient.countChildren(ZKUtils.buildJobExecutorsPath(jobName));
+		int executions = zkClient.countChildren(ZKUtils.buildJobExecutionsPath(jobName));
+		Integer instances = zkClient.readData(ZKUtils.buildJobInstancesPath(jobName), true);
+		String cron = zkClient.readData(ZKUtils.buildJobCronPath(jobName), true);
+		String paras = zkClient.readData(ZKUtils.buildJobParasPath(jobName), true);
+
+		ClusteredJobInfo jobInfo = new ClusteredJobInfo();
+		jobInfo.setJobName(jobName);
+		jobInfo.setExecutors(executors);
+		jobInfo.setExecutions(executions);
+		if (instances != null) {
+			jobInfo.setMaxInstances(instances);
+		}
+		if (cron != null) {
+			jobInfo.setCron(StringUtils.trim(cron));
+		}
+		if (paras != null) {
+			jobInfo.setParas(paras);
+		}
+		return jobInfo;
+	}
+
+	public void updateJob(ClusteredJobInfo jobInfo) {
+		String paras = JSON.toJSONString(JobUtils.parameterListToJson(jobInfo.getParas()));
+		jobInfo.setParas(paras);
+		jobInfo.setCron(StringUtils.trim(jobInfo.getCron()));
+
+		JobUtils.setConfJobParas(jobInfo.getJobName(), jobInfo.getParas());
+		zkClient.writeData(ZKUtils.buildJobInstancesPath(jobInfo.getJobName()), jobInfo.getMaxInstances());
+		if (StringUtils.isNoneBlank(jobInfo.getCron())) {
+			JobUtils.setJobCronExpression(jobInfo.getJobName(), jobInfo.getCron());
+		} else {
+			JobUtils.cleanJobCronExpression(jobInfo.getJobName());
+		}
+	}
+
+	public List<ExecutorInfo> listJobExecutors(String job) {
+		List<String> executorNames = zkClient.getChildren(ZKUtils.buildJobExecutorsPath(job));
+		List<ExecutorInfo> executors = new LinkedList<ExecutorInfo>();
+		for (String executor : executorNames) {
+			ExecutorInfo e = new ExecutorInfo();
+			e.setId(executor);
+			executors.add(e);
+		}
+		return executors;
+	}
+
+	public List<JobExecutionDTO> listJobExecutions(String job) {
+		List<String> executionIDs = zkClient.getChildren(ZKUtils.buildJobExecutionsPath(job));
+		List<JobExecutionDTO> executions = new LinkedList<JobExecutionDTO>();
+		for (String id : executionIDs) {
+			JobExecutionDTO e = zkClient.readData(ZKUtils.buildJobExecutionPath(job, id), true);
+			if (e != null) {
+				executions.add(e);
+			}
+		}
+		return executions;
 	}
 }

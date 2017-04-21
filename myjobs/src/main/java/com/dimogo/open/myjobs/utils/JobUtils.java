@@ -87,12 +87,39 @@ public class JobUtils {
 		}
 	}
 
-	public static void deleteJobNotification(String job, String notification) {
+	public static void deleteJobNotification(String notification) {
 		ZkClient zkClient = ZKUtils.newClient();
 		try {
 			zkClient.delete(ZKUtils.buildNotificationPath(notification));
 		} finally {
 			zkClient.close();
 		}
+	}
+
+	public static String jsonToParameterList(JSONObject jsonPara) {
+		if (jsonPara == null) {
+			return StringUtils.EMPTY;
+		}
+		StringBuilder paraList = new StringBuilder();
+		for (String key : jsonPara.keySet()) {
+			if (paraList.length() > 0) {
+				paraList.append("\r\n");
+			}
+			paraList.append(key).append("=").append(jsonPara.getString(key));
+		}
+		return paraList.toString();
+	}
+
+	public static JSONObject parameterListToJson(String parameterList) {
+		JSONObject paras = new JSONObject();
+		if (StringUtils.isBlank(parameterList)) {
+			return paras;
+		}
+		parameterList = parameterList.replaceAll("\r", "");
+		for (String pair : parameterList.split("\n")) {
+			String[] kv = pair.split("=");
+			paras.put(StringUtils.trim(kv[0]), StringUtils.trim(kv[1]));
+		}
+		return paras;
 	}
 }

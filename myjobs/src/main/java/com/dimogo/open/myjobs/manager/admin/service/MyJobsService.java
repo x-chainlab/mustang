@@ -2,6 +2,7 @@ package com.dimogo.open.myjobs.manager.admin.service;
 
 import com.dimogo.open.myjobs.dto.ClusteredJobInfo;
 import com.dimogo.open.myjobs.dto.ExecutorInfo;
+import com.dimogo.open.myjobs.dto.JobExecutionDTO;
 import com.dimogo.open.myjobs.dto.NotificationInfo;
 
 import java.util.List;
@@ -22,5 +23,13 @@ public interface MyJobsService {
 	List<NotificationInfo> listNotifications(int start, int pageSize);
 
 	int countNotifications();
+
+	ClusteredJobInfo findJob(String jobName);
+
+	void updateJob(ClusteredJobInfo jobInfo);
+
+	List<ExecutorInfo> listJobExecutors(String job);
+
+	List<JobExecutionDTO> listJobExecutions(String job);
 
 }

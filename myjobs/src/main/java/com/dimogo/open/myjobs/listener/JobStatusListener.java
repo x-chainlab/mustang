@@ -1,6 +1,7 @@
 package com.dimogo.open.myjobs.listener;
 
 import com.dimogo.open.myjobs.dto.JobExecutionDTO;
+import com.dimogo.open.myjobs.utils.ID;
 import com.dimogo.open.myjobs.utils.ZKUtils;
 import org.I0Itec.zkclient.ZkClient;
 import org.apache.zookeeper.CreateMode;
@@ -26,7 +27,8 @@ public class JobStatusListener implements JobExecutionListener {
 				ZKUtils.create(zkClient, ZKUtils.buildJobExecutionsPath(jobExecution.getJobInstance().getJobName()), null, CreateMode.PERSISTENT);
 
 				JobExecutionDTO jobExecutionDTO = new JobExecutionDTO();
-				jobExecutionDTO.setExecutorId(executionId.toString());
+				jobExecutionDTO.setExecutorId(ID.ExecutorID.toString());
+				jobExecutionDTO.setExecutionId(executionId.toString());
 				jobExecutionDTO.setJobId(jobExecution.getJobInstance().getId());
 				jobExecutionDTO.setJobInstanceId(jobExecution.getJobInstance().getInstanceId());
 				jobExecutionDTO.setJobName(jobExecution.getJobInstance().getJobName());
