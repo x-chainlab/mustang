@@ -10,7 +10,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <artifactId>myjobs</artifactId>
-    <packaging>war</packaging>
+    <packaging>jar</packaging>
     <version>${mustang.version}</version>
 
     <dependencies>

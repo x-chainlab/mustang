@@ -1,4 +1,5 @@
 myjobs/target/*
 hello-jar/target/*
+batchconsole/target/*
 **/*.iml
 **/*.idea/*
