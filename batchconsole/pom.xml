@@ -9,6 +9,7 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
     <packaging>war</packaging>
+    <version>1.0</version>
 
     <artifactId>batchconsole</artifactId>
 
@@ -18,7 +19,11 @@
             <artifactId>myjobs</artifactId>
             <version>1.0</version>
         </dependency>
+        <dependency>
+            <groupId>com.dimogo.open.mustang</groupId>
+            <artifactId>hello-jar</artifactId>
+            <version>1.0</version>
+        </dependency>
     </dependencies>
-
 
 </project>

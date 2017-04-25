@@ -7,14 +7,13 @@
     <groupId>com.dimogo.open.mustang</groupId>
     <artifactId>mustang</artifactId>
     <packaging>pom</packaging>
-    <version>${mustang.version}</version>
+    <version>1.0</version>
     <modules>
         <module>myjobs</module>
         <module>hello-jar</module>
         <module>batchconsole</module>
     </modules>
     <properties>
-        <mustang.version>1.0</mustang.version>
         <spring.batch.admin.version>2.0.0.M1</spring.batch.admin.version>
         <spring.batch.version>3.0.7.RELEASE</spring.batch.version>
         <spring.framework.version>4.1.2.RELEASE</spring.framework.version>
@@ -24,6 +23,18 @@
         <spring.hateoas.version>0.16.0.RELEASE</spring.hateoas.version>
         <slf4j.version>1.7.7</slf4j.version>
     </properties>
+
+    <profiles>
+        <profile>
+            <id>release</id>
+            <properties>
+                <mustang.version>1.0</mustang.version>
+            </properties>
+            <activation>
+                <activeByDefault>true</activeByDefault>
+            </activation>
+        </profile>
+    </profiles>
 
     <distributionManagement>
         <repository>
@@ -423,12 +434,6 @@
             <groupId>org.apache.commons</groupId>
             <artifactId>commons-lang3</artifactId>
             <version>3.5</version>
-        </dependency>
-
-        <dependency>
-            <groupId>com.dimogo.open.mustang</groupId>
-            <artifactId>hello-jar</artifactId>
-            <version>1.0</version>
         </dependency>
     </dependencies>
 
