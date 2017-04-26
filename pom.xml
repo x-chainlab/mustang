@@ -24,11 +24,33 @@
         <slf4j.version>1.7.7</slf4j.version>
     </properties>
 
+    <build>
+        <plugins>
+            <plugin>
+                <artifactId>versions-maven-plugin</artifactId>
+                <groupId>org.codehaus.mojo</groupId>
+                <version>2.2</version>
+                <configuration>
+                    <newVersion>${mustang.version}</newVersion>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+
     <profiles>
         <profile>
             <id>release</id>
             <properties>
                 <mustang.version>1.0</mustang.version>
+            </properties>
+            <activation>
+                <activeByDefault>false</activeByDefault>
+            </activation>
+        </profile>
+        <profile>
+            <id>dev</id>
+            <properties>
+                <mustang.version>1.0-SNAPSHOT</mustang.version>
             </properties>
             <activation>
                 <activeByDefault>true</activeByDefault>

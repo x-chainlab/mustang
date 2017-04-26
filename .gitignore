@@ -3,3 +3,4 @@ hello-jar/target/*
 batchconsole/target/*
 **/*.iml
 **/*.idea/*
+**/pom.xml.versionsBackup
