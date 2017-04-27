@@ -45,4 +45,12 @@ public class Config {
 			return 10000;
 		}
 	}
+
+	public static long getResourceMonitorInterval() {
+		try {
+			return Long.parseLong(getSysProperties("executor.monitor.interval"));
+		} catch (Throwable e) {
+			return 5 * 60 * 000;
+		}
+	}
 }

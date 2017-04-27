@@ -8,6 +8,11 @@
 			<table title="Executor Names" class="bordered-table">
 				<tr>
 					<th>ID</th>
+					<th>Host</th>
+					<th>IP</th>
+                    <th>ARCH</th>
+					<th>CPU%</th>
+					<th>Disk%</th>
 				</tr>
 				<#list executors as executor>
 					<#if executor_index % 2 == 0>
@@ -17,6 +22,11 @@
 					</#if>
 					<tr class="${rowClass}">
 						<td>${executor.id}</td>
+						<td><#if executor.host??>${executor.host}</#if></td>
+                        <td><#if executor.ip??>${executor.ip}</#if></td>
+                        <td><#if executor.arch??>${executor.arch}</#if></td>
+                        <td>${executor.cpuUsedPercent}</td>
+                        <td>${executor.diskUsedPercent}</td>
 					</tr>
 				</#list>
 			</table>

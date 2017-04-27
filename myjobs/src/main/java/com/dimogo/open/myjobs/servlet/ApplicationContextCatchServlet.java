@@ -2,6 +2,7 @@ package com.dimogo.open.myjobs.servlet;
 
 import com.dimogo.open.myjobs.quartz.MyJobMaster;
 import com.dimogo.open.myjobs.quartz.MyJobSlave;
+import com.dimogo.open.myjobs.sys.ExecutorResourceMonitor;
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.context.support.WebApplicationContextUtils;
 
@@ -24,8 +25,10 @@ public class ApplicationContextCatchServlet extends HttpServlet {
 
 		Thread masterThread = new Thread(new MyJobMaster());
 		Thread slaveThread = new Thread(new MyJobSlave());
+		Thread monitorThread = new Thread(new ExecutorResourceMonitor());
 		masterThread.start();
 		slaveThread.start();
+		monitorThread.start();
 	}
 
 	@Override

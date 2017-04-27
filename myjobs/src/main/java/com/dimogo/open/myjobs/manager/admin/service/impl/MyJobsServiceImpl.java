@@ -1,10 +1,7 @@
 package com.dimogo.open.myjobs.manager.admin.service.impl;
 
 import com.alibaba.fastjson.JSON;
-import com.dimogo.open.myjobs.dto.ClusteredJobInfo;
-import com.dimogo.open.myjobs.dto.ExecutorInfo;
-import com.dimogo.open.myjobs.dto.JobExecutionDTO;
-import com.dimogo.open.myjobs.dto.NotificationInfo;
+import com.dimogo.open.myjobs.dto.*;
 import com.dimogo.open.myjobs.exception.JobRegisterException;
 import com.dimogo.open.myjobs.manager.admin.service.MyJobsService;
 import com.dimogo.open.myjobs.utils.ID;
@@ -89,10 +86,21 @@ public class MyJobsServiceImpl implements MyJobsService {
 		}
 		List<ExecutorInfo> executorInfos = new ArrayList<ExecutorInfo>(executors.size());
 		for (String executor : executors) {
-			ExecutorInfo executorInfo = new ExecutorInfo();
-			executorInfo.setId(executor);
+			ExecutorInfo e = new ExecutorInfo();
+			e.setId(executor);
 
-			executorInfos.add(executorInfo);
+			String runtimeJson = zkClient.readData(ZKUtils.buildExecutorIDPath(executor), true);
+			if (StringUtils.isNoneBlank(runtimeJson)) {
+				RuntimeInfo runtimeInfo = JSON.parseObject(runtimeJson, RuntimeInfo.class);
+				e.setId(runtimeInfo.getIp());
+				e.setHost(runtimeInfo.getHostName());
+				e.setIp(runtimeInfo.getIp());
+				e.setArch(runtimeInfo.getOsArch());
+				e.setCpuUsedPercent(runtimeInfo.getCpusUsedPercent());
+				e.setDiskUsedPercent(runtimeInfo.getDisksUsedPercent());
+			}
+
+			executorInfos.add(e);
 		}
 		return executorInfos;
 	}
@@ -165,25 +173,44 @@ public class MyJobsServiceImpl implements MyJobsService {
 	}
 
 	public List<ExecutorInfo> listJobExecutors(String job) {
-		List<String> executorNames = zkClient.getChildren(ZKUtils.buildJobExecutorsPath(job));
 		List<ExecutorInfo> executors = new LinkedList<ExecutorInfo>();
-		for (String executor : executorNames) {
-			ExecutorInfo e = new ExecutorInfo();
-			e.setId(executor);
-			executors.add(e);
+		try {
+			List<String> executorNames = zkClient.getChildren(ZKUtils.buildJobExecutorsPath(job));
+			for (String executor : executorNames) {
+				ExecutorInfo e = new ExecutorInfo();
+				e.setId(executor);
+
+				String runtimeJson = zkClient.readData(ZKUtils.buildExecutorIDPath(executor), true);
+				if (StringUtils.isNoneBlank(runtimeJson)) {
+					RuntimeInfo runtimeInfo = JSON.parseObject(runtimeJson, RuntimeInfo.class);
+					e.setId(runtimeInfo.getIp());
+					e.setHost(runtimeInfo.getHostName());
+					e.setIp(runtimeInfo.getIp());
+					e.setArch(runtimeInfo.getOsArch());
+					e.setCpuUsedPercent(runtimeInfo.getCpusUsedPercent());
+					e.setDiskUsedPercent(runtimeInfo.getDisksUsedPercent());
+				}
+				executors.add(e);
+			}
+			return executors;
+		} catch (Exception e) {
+			return executors;
 		}
-		return executors;
 	}
 
 	public List<JobExecutionDTO> listJobExecutions(String job) {
-		List<String> executionIDs = zkClient.getChildren(ZKUtils.buildJobExecutionsPath(job));
 		List<JobExecutionDTO> executions = new LinkedList<JobExecutionDTO>();
-		for (String id : executionIDs) {
-			JobExecutionDTO e = zkClient.readData(ZKUtils.buildJobExecutionPath(job, id), true);
-			if (e != null) {
-				executions.add(e);
+		try {
+			List<String> executionIDs = zkClient.getChildren(ZKUtils.buildJobExecutionsPath(job));
+			for (String id : executionIDs) {
+				JobExecutionDTO e = zkClient.readData(ZKUtils.buildJobExecutionPath(job, id), true);
+				if (e != null) {
+					executions.add(e);
+				}
 			}
+			return executions;
+		} catch (Exception e) {
+			return executions;
 		}
-		return executions;
 	}
 }

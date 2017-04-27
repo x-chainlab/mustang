@@ -1,7 +1,5 @@
 package com.dimogo.open.myjobs.listener;
 
-import com.dimogo.open.myjobs.quartz.MyJobMaster;
-import com.dimogo.open.myjobs.quartz.MyJobSlave;
 import com.dimogo.open.myjobs.utils.ZKUtils;
 import org.I0Itec.zkclient.ZkClient;
 import org.apache.zookeeper.CreateMode;

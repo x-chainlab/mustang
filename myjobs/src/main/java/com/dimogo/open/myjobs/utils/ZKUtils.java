@@ -90,6 +90,10 @@ public class ZKUtils {
 		return Path.Executors.build() + "/" + ID.ExecutorID;
 	}
 
+	public static String buildExecutorIDPath(String executorId) {
+		return Path.Executors.build() + "/" + executorId;
+	}
+
 	public static String buildJobExecutionsPath(String job) {
 		return Path.Jobs.build() + "/" + job + "/executions";
 	}

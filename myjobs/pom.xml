@@ -41,6 +41,18 @@
             <artifactId>quartz</artifactId>
             <version>2.2.3</version>
         </dependency>
+        <dependency>
+            <groupId>org.hyperic</groupId>
+            <artifactId>sigar</artifactId>
+            <version>1.6.5.132-6</version>
+        </dependency>
     </dependencies>
+
+    <repositories>
+        <repository>
+            <id>Redhat GA</id>
+            <url>https://maven.repository.redhat.com/ga/</url>
+        </repository>
+    </repositories>
 
 </project>
