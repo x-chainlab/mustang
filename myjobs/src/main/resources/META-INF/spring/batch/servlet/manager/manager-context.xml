@@ -18,6 +18,16 @@
 		</property>
 	</bean>
 
+	<bean name="executor" parent="standard">
+		<property name="attributes">
+			<props merge="true">
+				<prop key="body">/manager/executors/html/executor.ftl</prop>
+				<prop key="titleCode">myjobs.executor.title</prop>
+				<prop key="titleText">MyJobs Batch Admin: Executor Infomation</prop>
+			</props>
+		</property>
+	</bean>
+
 	<bean name="master" parent="standard">
 		<property name="attributes">
 			<props merge="true">

@@ -1,9 +1,6 @@
 package com.dimogo.open.myjobs.manager.admin.service;
 
-import com.dimogo.open.myjobs.dto.ClusteredJobInfo;
-import com.dimogo.open.myjobs.dto.ExecutorInfo;
-import com.dimogo.open.myjobs.dto.JobExecutionDTO;
-import com.dimogo.open.myjobs.dto.NotificationInfo;
+import com.dimogo.open.myjobs.dto.*;
 
 import java.util.List;
 
@@ -17,6 +14,8 @@ public interface MyJobsService {
 	int countJobs();
 
 	List<ExecutorInfo> listExecutors(int start, int pageSize);
+
+	ExecutorDetails findExecutor(String executorId);
 
 	int countExecutors();
 

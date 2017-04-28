@@ -90,19 +90,32 @@ public class MyJobsServiceImpl implements MyJobsService {
 			e.setId(executor);
 
 			String runtimeJson = zkClient.readData(ZKUtils.buildExecutorIDPath(executor), true);
-			if (StringUtils.isNoneBlank(runtimeJson)) {
+			if (StringUtils.isNotBlank(runtimeJson)) {
 				RuntimeInfo runtimeInfo = JSON.parseObject(runtimeJson, RuntimeInfo.class);
-				e.setId(runtimeInfo.getIp());
 				e.setHost(runtimeInfo.getHostName());
 				e.setIp(runtimeInfo.getIp());
 				e.setArch(runtimeInfo.getOsArch());
 				e.setCpuUsedPercent(runtimeInfo.getCpusUsedPercent());
 				e.setDiskUsedPercent(runtimeInfo.getDisksUsedPercent());
+				e.setOsVendorName(runtimeInfo.getOsVendorName());
+				e.setOsVersion(runtimeInfo.getOsVersion());
 			}
 
 			executorInfos.add(e);
 		}
 		return executorInfos;
+	}
+
+	public ExecutorDetails findExecutor(String executorId) {
+		ExecutorDetails details = new ExecutorDetails();
+		details.setId(executorId);
+
+		String runtimeJson = zkClient.readData(ZKUtils.buildExecutorIDPath(executorId), true);
+		if (StringUtils.isNotBlank(runtimeJson)) {
+			RuntimeInfo runtimeInfo = JSON.parseObject(runtimeJson, RuntimeInfo.class);
+			details.setRuntime(runtimeInfo);
+		}
+		return details;
 	}
 
 	public int countExecutors() {
@@ -181,14 +194,15 @@ public class MyJobsServiceImpl implements MyJobsService {
 				e.setId(executor);
 
 				String runtimeJson = zkClient.readData(ZKUtils.buildExecutorIDPath(executor), true);
-				if (StringUtils.isNoneBlank(runtimeJson)) {
+				if (StringUtils.isNotBlank(runtimeJson)) {
 					RuntimeInfo runtimeInfo = JSON.parseObject(runtimeJson, RuntimeInfo.class);
-					e.setId(runtimeInfo.getIp());
 					e.setHost(runtimeInfo.getHostName());
 					e.setIp(runtimeInfo.getIp());
 					e.setArch(runtimeInfo.getOsArch());
 					e.setCpuUsedPercent(runtimeInfo.getCpusUsedPercent());
 					e.setDiskUsedPercent(runtimeInfo.getDisksUsedPercent());
+					e.setOsVendorName(runtimeInfo.getOsVendorName());
+					e.setOsVersion(runtimeInfo.getOsVersion());
 				}
 				executors.add(e);
 			}

@@ -55,6 +55,7 @@
                 <th>ARCH</th>
                 <th>CPU%</th>
                 <th>Disk%</th>
+                <th>OS</th>
             </tr>
             <#list jobExecutors as executor>
                 <#if executor_index % 2 == 0>
@@ -63,12 +64,14 @@
                     <#assign rowClass="name-sublevel1-odd"/>
                 </#if>
                 <tr class="${rowClass}">
-                    <td>${executor.id}</td>
+                    <#assign executor_url><@spring.url relativeUrl="${servletPath}/executor/${executor.id}/"/></#assign>
+                    <td><a href="${executor_url}">${executor.id}</a></td>
                     <td><#if executor.host??>${executor.host}</#if></td>
                     <td><#if executor.ip??>${executor.ip}</#if></td>
                     <td><#if executor.arch??>${executor.arch}</#if></td>
-                    <td>${executor.cpuUsedPercent}</td>
-                    <td>${executor.diskUsedPercent}</td>
+                    <td>${executor.cpuUsedPercent}%</td>
+                    <td>${executor.diskUsedPercent}%</td>
+                    <td>${executor.osVendorName}&nbsp;${executor.osVersion}</td>
                 </tr>
             </#list>
         </table>
