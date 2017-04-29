@@ -24,12 +24,12 @@
 					<tr class="${rowClass}">
 						<#assign executor_url><@spring.url relativeUrl="${servletPath}/executor/${executor.id}/"/></#assign>
 						<td><a href="${executor_url}">${executor.id}</a></td>
-						<td><#if executor.host??>${executor.host}</#if></td>
-                        <td><#if executor.ip??>${executor.ip}</#if></td>
-                        <td><#if executor.arch??>${executor.arch}</#if></td>
-                        <td>${executor.cpuUsedPercent}%</td>
-                        <td>${executor.diskUsedPercent}%</td>
-						<td>${executor.osVendorName}&nbsp;${executor.osVersion}</td>
+                    <td><#if executor.host??>${executor.host}</#if></td>
+                    <td><#if executor.ip??>${executor.ip}</#if></td>
+                    <td><#if executor.arch??>${executor.arch}</#if></td>
+                    <td>${executor.cpuUsedPercent}%</td>
+                    <td>${executor.diskUsedPercent}%</td>
+                    <td><#if executor.osVendorName??>${executor.osVendorName}</#if>&nbsp;<#if executor.osVersion??>${executor.osVersion}</#if></td>
 					</tr>
 				</#list>
 			</table>

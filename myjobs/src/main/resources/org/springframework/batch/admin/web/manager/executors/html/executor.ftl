@@ -7,9 +7,9 @@
         <ol>
             <li><label for="executor.id">Executor ID</label><span id="executor.id">${executor.id}</span></li>
             <#if executor.runtime??>
-                <li><label for="executor.runtime.ip">IP Address</label><span id="executor.runtime.ip">${executor.runtime.ip}</span></li>
+                <li><label for="executor.runtime.ip">IP Address</label><span id="executor.runtime.ip"><#if executor.runtime.ip??>${executor.runtime.ip}</#if></span></li>
                 <li><label for="executor.runtime.hostName">Host Name</label><span
-                        id="executor.runtime.hostName">${executor.runtime.hostName}</span></li>
+                        id="executor.runtime.hostName"><#if executor.runtime.hostName??>${executor.runtime.hostName}</#if></span></li>
                 <li><label for="executor.runtime.vmTotalMemory">JVM Total Memory</label><span
                         id="executor.runtime.vmTotalMemory">${executor.runtime.vmTotalMemory}</span></li>
                 <li><label for="executor.runtime.vmFreeMemory">JVM Free Memory</label><span
@@ -26,26 +26,26 @@
                         id="executor.runtime.usedSwap">${executor.runtime.usedSwap}</span></li>
                 <li><label for="executor.runtime.freeSwap">Free Swap</label><span
                         id="executor.runtime.freeSwap">${executor.runtime.freeSwap}</span></li>
-                <li><label for="executor.runtime.osArch">OS Arch</label><span id="executor.runtime.osArch">${executor.runtime.osArch}</span>
+                <li><label for="executor.runtime.osArch">OS Arch</label><span id="executor.runtime.osArch"><#if executor.runtime.osArch??>${executor.runtime.osArch}</#if></span>
                 </li>
                 <li><label for="executor.runtime.osCpuEndian">OS CPU Endian</label><span
-                        id="executor.runtime.osCpuEndian">${executor.runtime.osCpuEndian}</span></li>
+                        id="executor.runtime.osCpuEndian"><#if executor.runtime.osCpuEndian??>${executor.runtime.osCpuEndian}</#if></span></li>
                 <li><label for="executor.runtime.osDataModel">OS Data Model</label><span
-                        id="executor.runtime.osDataModel">${executor.runtime.osDataModel}</span></li>
+                        id="executor.runtime.osDataModel"><#if executor.runtime.osDataModel??>${executor.runtime.osDataModel}</#if></span></li>
                 <li><label for="executor.runtime.osDescription">OS Description</label><span
-                        id="executor.runtime.osDescription">${executor.runtime.osDescription}</span></li>
+                        id="executor.runtime.osDescription"><#if executor.runtime.osDescription??>${executor.runtime.osDescription}</#if></span></li>
                 <li><label for="executor.runtime.osVendor">OS Vendor</label><span
-                        id="executor.runtime.osVendor">${executor.runtime.osVendor}</span></li>
+                        id="executor.runtime.osVendor"><#if executor.runtime.osVendor??>${executor.runtime.osVendor}</#if></span></li>
                 <li><label for="executor.runtime.osVendorCodeName">OS Vendor Code</label><span
-                        id="executor.runtime.osVendorCodeName">${executor.runtime.osVendorCodeName}</span></li>
+                        id="executor.runtime.osVendorCodeName"><#if executor.runtime.osVendorCodeName??>${executor.runtime.osVendorCodeName}</#if></span></li>
                 <li><label for="executor.runtime.osVendorName">OS Vendor Name</label><span
-                        id="executor.runtime.osVendorName">${executor.runtime.osVendorName}</span></li>
+                        id="executor.runtime.osVendorName"><#if executor.runtime.osVendorName??>${executor.runtime.osVendorName}</#if></span></li>
                 <li><label for="executor.runtime.osVendorVersion">OS Vendor Version</label><span
-                        id="executor.runtime.osVendorVersion">${executor.runtime.osVendorVersion}</span></li>
+                        id="executor.runtime.osVendorVersion"><#if executor.runtime.osVendorVersion??>${executor.runtime.osVendorVersion}</#if></span></li>
                 <li><label for="executor.runtime.osVersion">OS Version</label><span
-                        id="executor.runtime.osVersion">${executor.runtime.osVersion}</span></li>
+                        id="executor.runtime.osVersion"><#if executor.runtime.osVersion??>${executor.runtime.osVersion}</#if></span></li>
             <#else>
-                <li><label>Install Sigar</label><span>${executor.runtime.javaLibraryPath}</span></li>
+                <li><label>Sigar</label><span>Please install Sigar 1.6.5 into Java Library Path</span></li>
             </#if>
         </ol>
         <br/>
