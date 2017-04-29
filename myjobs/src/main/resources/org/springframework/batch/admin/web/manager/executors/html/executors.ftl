@@ -10,7 +10,7 @@
 					<th>ID</th>
 					<th>Host</th>
 					<th>IP</th>
-                    <th>ARCH</th>
+                    <th>Arch</th>
 					<th>CPU%</th>
 					<th>Disk%</th>
 					<th>OS&nbsp;Version</th>
