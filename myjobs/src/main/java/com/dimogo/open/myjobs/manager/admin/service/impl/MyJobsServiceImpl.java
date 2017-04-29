@@ -14,10 +14,7 @@ import org.apache.commons.collections.MapUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.zookeeper.CreateMode;
 
-import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Created by Ethan Xiao on 2017/4/19.
@@ -226,5 +223,15 @@ public class MyJobsServiceImpl implements MyJobsService {
 		} catch (Exception e) {
 			return executions;
 		}
+	}
+
+	public MasterInfo findMaster() {
+		UUID masterId = zkClient.readData(ZKUtils.Path.MasterNode.build(), true);
+		if (masterId == null) {
+			return null;
+		}
+		MasterInfo masterInfo = new MasterInfo();
+		masterInfo.setId(masterId.toString());
+		return masterInfo;
 	}
 }

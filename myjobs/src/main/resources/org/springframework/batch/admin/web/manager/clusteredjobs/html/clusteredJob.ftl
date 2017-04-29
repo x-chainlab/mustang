@@ -37,8 +37,9 @@
                     <#assign rowClass="name-sublevel1-odd"/>
                 </#if>
                 <tr class="${rowClass}">
+                    <#assign executor_url><@spring.url relativeUrl="${servletPath}/executor/${execution.executorId}/"/></#assign>
                     <td>${execution.executionId}</a></td>
-                    <td>${execution.executorId}</td>
+                    <td><a href="${executor_url}">${execution.executorId}</a></td>
                     <td>${execution.jobId}</td>
                     <td>${execution.jobInstanceId}</td>
                 </tr>

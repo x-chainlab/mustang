@@ -31,4 +31,6 @@ public interface MyJobsService {
 
 	List<JobExecutionDTO> listJobExecutions(String job);
 
+	MasterInfo findMaster();
+
 }
