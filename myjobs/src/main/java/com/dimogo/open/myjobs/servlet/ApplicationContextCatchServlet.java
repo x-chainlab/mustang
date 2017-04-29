@@ -28,7 +28,7 @@ public class ApplicationContextCatchServlet extends HttpServlet {
 		Thread monitorThread = new Thread(new ExecutorResourceMonitor());
 		masterThread.start();
 		slaveThread.start();
-//		monitorThread.start();
+		monitorThread.start();
 	}
 
 	@Override

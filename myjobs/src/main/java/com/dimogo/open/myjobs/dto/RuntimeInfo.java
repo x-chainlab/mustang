@@ -5,6 +5,7 @@ import org.hyperic.sigar.*;
 
 import java.net.InetAddress;
 import java.net.UnknownHostException;
+import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -13,7 +14,7 @@ import java.util.Map;
  * Created by Ethan Xiao on 2017/4/27.
  */
 public class RuntimeInfo {
-
+	private Date time;
 	private String javaLibraryPath = System.getProperty("java.library.path");
 
 	//vm
@@ -47,6 +48,14 @@ public class RuntimeInfo {
 	private List<NetRuntimeInfo> nets;
 	private List<EthernetRuntimeInfo> ethernets;
 	private Map<String, String> systemProperties;
+
+	public Date getTime() {
+		return time;
+	}
+
+	public void setTime(Date time) {
+		this.time = time;
+	}
 
 	public void setJavaLibraryPath(String javaLibraryPath) {
 		this.javaLibraryPath = javaLibraryPath;
@@ -283,6 +292,7 @@ public class RuntimeInfo {
 	}
 
 	public void setup() {
+		time = new Date();
 		InetAddress addr;
 		try {
 			addr = InetAddress.getLocalHost();

@@ -7,7 +7,10 @@
         <ol>
             <li><label for="executor.id">Executor ID</label><span id="executor.id">${executor.id}</span></li>
             <#if executor.runtime??>
-                <li><label for="executor.runtime.ip">IP Address</label><span id="executor.runtime.ip"><#if executor.runtime.ip??>${executor.runtime.ip}</#if></span></li>
+                <li><label for="executor.runtime.time">Update Time</label><span
+                        id="executor.runtime.time">${(executor.runtime.time?string("yyyy-MM-dd HH:mm:ss"))!'Unknow'}</span></li>
+                <li><label for="executor.runtime.ip">IP Address</label><span
+                        id="executor.runtime.ip"><#if executor.runtime.ip??>${executor.runtime.ip}</#if></span></li>
                 <li><label for="executor.runtime.hostName">Host Name</label><span
                         id="executor.runtime.hostName"><#if executor.runtime.hostName??>${executor.runtime.hostName}</#if></span></li>
                 <li><label for="executor.runtime.vmTotalMemory">JVM Total Memory</label><span
@@ -26,22 +29,29 @@
                         id="executor.runtime.usedSwap">${executor.runtime.usedSwap}</span></li>
                 <li><label for="executor.runtime.freeSwap">Free Swap</label><span
                         id="executor.runtime.freeSwap">${executor.runtime.freeSwap}</span></li>
-                <li><label for="executor.runtime.osArch">OS Arch</label><span id="executor.runtime.osArch"><#if executor.runtime.osArch??>${executor.runtime.osArch}</#if></span>
+                <li><label for="executor.runtime.osArch">OS Arch</label><span
+                        id="executor.runtime.osArch"><#if executor.runtime.osArch??>${executor.runtime.osArch}</#if></span>
                 </li>
                 <li><label for="executor.runtime.osCpuEndian">OS CPU Endian</label><span
-                        id="executor.runtime.osCpuEndian"><#if executor.runtime.osCpuEndian??>${executor.runtime.osCpuEndian}</#if></span></li>
+                        id="executor.runtime.osCpuEndian"><#if executor.runtime.osCpuEndian??>${executor.runtime.osCpuEndian}</#if></span>
+                </li>
                 <li><label for="executor.runtime.osDataModel">OS Data Model</label><span
-                        id="executor.runtime.osDataModel"><#if executor.runtime.osDataModel??>${executor.runtime.osDataModel}</#if></span></li>
+                        id="executor.runtime.osDataModel"><#if executor.runtime.osDataModel??>${executor.runtime.osDataModel}</#if></span>
+                </li>
                 <li><label for="executor.runtime.osDescription">OS Description</label><span
-                        id="executor.runtime.osDescription"><#if executor.runtime.osDescription??>${executor.runtime.osDescription}</#if></span></li>
+                        id="executor.runtime.osDescription"><#if executor.runtime.osDescription??>${executor.runtime.osDescription}</#if></span>
+                </li>
                 <li><label for="executor.runtime.osVendor">OS Vendor</label><span
                         id="executor.runtime.osVendor"><#if executor.runtime.osVendor??>${executor.runtime.osVendor}</#if></span></li>
                 <li><label for="executor.runtime.osVendorCodeName">OS Vendor Code</label><span
-                        id="executor.runtime.osVendorCodeName"><#if executor.runtime.osVendorCodeName??>${executor.runtime.osVendorCodeName}</#if></span></li>
+                        id="executor.runtime.osVendorCodeName"><#if executor.runtime.osVendorCodeName??>${executor.runtime.osVendorCodeName}</#if></span>
+                </li>
                 <li><label for="executor.runtime.osVendorName">OS Vendor Name</label><span
-                        id="executor.runtime.osVendorName"><#if executor.runtime.osVendorName??>${executor.runtime.osVendorName}</#if></span></li>
+                        id="executor.runtime.osVendorName"><#if executor.runtime.osVendorName??>${executor.runtime.osVendorName}</#if></span>
+                </li>
                 <li><label for="executor.runtime.osVendorVersion">OS Vendor Version</label><span
-                        id="executor.runtime.osVendorVersion"><#if executor.runtime.osVendorVersion??>${executor.runtime.osVendorVersion}</#if></span></li>
+                        id="executor.runtime.osVendorVersion"><#if executor.runtime.osVendorVersion??>${executor.runtime.osVendorVersion}</#if></span>
+                </li>
                 <li><label for="executor.runtime.osVersion">OS Version</label><span
                         id="executor.runtime.osVersion"><#if executor.runtime.osVersion??>${executor.runtime.osVersion}</#if></span></li>
             <#else>
@@ -51,7 +61,9 @@
         <br/>
     </#if>
     <#if cpus?? && cpus?size!=0>
-        <p><h3>CPU:</h3></p>
+        <p>
+
+        <h3>CPU:</h3></p>
         <table class="bordered-table">
             <tr>
                 <th>Index</th>
@@ -74,8 +86,8 @@
                 </#if>
                 <tr class="${rowClass}">
                     <td>${cpu_index + 1}</td>
-                    <td>${cpu.vendor}</td>
-                    <td>${cpu.model}</td>
+                    <td><#if cpu.vendor??>${cpu.vendor}</#if></td>
+                    <td><#if cpu.model??>${cpu.model}</#if></td>
                     <td>${cpu.mhz}</td>
                     <td>${cpu.cacheSize}</td>
                     <td>${cpu.user}</td>
@@ -89,7 +101,9 @@
         </table>
     </#if>
     <#if disks?? && disks?size!=0>
-        <p><h3>Disk:</h3></p>
+        <p>
+
+        <h3>Disk:</h3></p>
         <table class="bordered-table">
             <tr>
                 <th>Index</th>
@@ -114,11 +128,11 @@
                 </#if>
                 <tr class="${rowClass}">
                     <td>${disk_index + 1}</td>
-                    <td>${disk.device}</td>
-                    <td>${disk.dir}</td>
+                    <td><#if disk.device??>${disk.device}</#if></td>
+                    <td><#if disk.dir??>${disk.dir}</#if></td>
                     <td>${disk.flags}</td>
-                    <td>${disk.fs}</td>
-                    <td>${disk.type}</td>
+                    <td><#if disk.fs??>${disk.fs}</#if></td>
+                    <td><#if disk.type??>${disk.type}</#if></td>
                     <td>${disk.reads}</td>
                     <td>${disk.writes}</td>
                     <td>${disk.total}</td>
@@ -131,7 +145,9 @@
         </table>
     </#if>
     <#if nets?? && nets?size!=0>
-        <p><h3>Network:</h3></p>
+        <p>
+
+        <h3>Network:</h3></p>
         <table class="bordered-table">
             <tr>
                 <th>Index</th>
@@ -155,9 +171,9 @@
                 </#if>
                 <tr class="${rowClass}">
                     <td>${net_index + 1}</td>
-                    <td>${net.device}</td>
-                    <td>${net.ip}</td>
-                    <td>${net.mask}</td>
+                    <td><#if net.device??>${net.device}</#if></td>
+                    <td><#if net.ip??>${net.ip}</#if></td>
+                    <td><#if net.mask??>${net.mask}</#if></td>
                     <td>${net.rxPackets}</td>
                     <td>${net.txPackets}</td>
                     <td>${net.rxBytes}</td>
@@ -171,7 +187,9 @@
         </table>
     </#if>
     <#if ethernets?? && ethernets?size!=0>
-        <p><h3>Ethernet:</h3></p>
+        <p>
+
+        <h3>Ethernet:</h3></p>
         <table class="bordered-table">
             <tr>
                 <th>Index</th>
@@ -191,19 +209,21 @@
                 </#if>
                 <tr class="${rowClass}">
                     <td>${net_index + 1}</td>
-                    <td>${net.device}</td>
-                    <td>${net.type}</td>
-                    <td>${net.ip}</td>
-                    <td>${net.mac}</td>
-                    <td>${net.mask}</td>
-                    <td>${net.broadcast}</td>
-                    <td>${net.description}</td>
+                    <td><#if net.device??>${net.device}</#if></td>
+                    <td><#if net.type??>${net.type}</#if></td>
+                    <td><#if net.ip??>${net.ip}</#if></td>
+                    <td><#if net.mac??>${net.mac}</#if></td>
+                    <td><#if net.mask??>${net.mask}</#if></td>
+                    <td><#if net.broadcast??>${net.broadcast}</#if></td>
+                    <td><#if net.description??>${net.description}</#if></td>
                 </tr>
             </#list>
         </table>
     </#if>
     <#if properties?? && properties?size!=0>
-        <p><h3>System Properties:</h3></p>
+        <p>
+
+        <h3>System Properties:</h3></p>
         <table class="bordered-table">
             <tr>
                 <th>Index</th>
@@ -219,7 +239,7 @@
                 <tr class="${rowClass}">
                     <td>${key_index + 1}</td>
                     <td>${key}</td>
-                    <td>${properties[key]}</td>
+                    <td><#if properties[key]??>${properties[key]}</#if></td>
                 </tr>
             </#list>
         </table>
