@@ -145,6 +145,7 @@ public class ZKUtils {
 					} catch (Throwable e) {
 						if (e instanceof ZkNodeExistsException) {
 							zkClient.watchForChilds(lockPath);
+							continue;
 						}
 						throw e;
 					}
