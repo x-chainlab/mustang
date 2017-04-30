@@ -10,6 +10,24 @@ public class ExecutorInfo {
 	private String arch;
 	private double cpuUsedPercent;
 	private double diskUsedPercent;
+	private String osVendorName;
+	private String osVersion;
+
+	public String getOsVendorName() {
+		return osVendorName;
+	}
+
+	public void setOsVendorName(String osVendorName) {
+		this.osVendorName = osVendorName;
+	}
+
+	public String getOsVersion() {
+		return osVersion;
+	}
+
+	public void setOsVersion(String osVersion) {
+		this.osVersion = osVersion;
+	}
 
 	public String getArch() {
 		return arch;

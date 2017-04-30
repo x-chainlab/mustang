@@ -10,9 +10,10 @@
 					<th>ID</th>
 					<th>Host</th>
 					<th>IP</th>
-                    <th>ARCH</th>
+                    <th>Arch</th>
 					<th>CPU%</th>
 					<th>Disk%</th>
+					<th>OS&nbsp;Version</th>
 				</tr>
 				<#list executors as executor>
 					<#if executor_index % 2 == 0>
@@ -21,12 +22,14 @@
 						<#assign rowClass="name-sublevel1-odd"/>
 					</#if>
 					<tr class="${rowClass}">
-						<td>${executor.id}</td>
-						<td><#if executor.host??>${executor.host}</#if></td>
-                        <td><#if executor.ip??>${executor.ip}</#if></td>
-                        <td><#if executor.arch??>${executor.arch}</#if></td>
-                        <td>${executor.cpuUsedPercent}</td>
-                        <td>${executor.diskUsedPercent}</td>
+						<#assign executor_url><@spring.url relativeUrl="${servletPath}/executor/${executor.id}/"/></#assign>
+						<td><a href="${executor_url}">${executor.id}</a></td>
+                    <td><#if executor.host??>${executor.host}</#if></td>
+                    <td><#if executor.ip??>${executor.ip}</#if></td>
+                    <td><#if executor.arch??>${executor.arch}</#if></td>
+                    <td>${executor.cpuUsedPercent}%</td>
+                    <td>${executor.diskUsedPercent}%</td>
+                    <td><#if executor.osVendorName??>${executor.osVendorName}</#if>&nbsp;<#if executor.osVersion??>${executor.osVersion}</#if></td>
 					</tr>
 				</#list>
 			</table>

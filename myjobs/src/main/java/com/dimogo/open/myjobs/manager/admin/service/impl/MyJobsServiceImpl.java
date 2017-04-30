@@ -14,10 +14,7 @@ import org.apache.commons.collections.MapUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.zookeeper.CreateMode;
 
-import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Created by Ethan Xiao on 2017/4/19.
@@ -90,19 +87,32 @@ public class MyJobsServiceImpl implements MyJobsService {
 			e.setId(executor);
 
 			String runtimeJson = zkClient.readData(ZKUtils.buildExecutorIDPath(executor), true);
-			if (StringUtils.isNoneBlank(runtimeJson)) {
+			if (StringUtils.isNotBlank(runtimeJson)) {
 				RuntimeInfo runtimeInfo = JSON.parseObject(runtimeJson, RuntimeInfo.class);
-				e.setId(runtimeInfo.getIp());
 				e.setHost(runtimeInfo.getHostName());
 				e.setIp(runtimeInfo.getIp());
 				e.setArch(runtimeInfo.getOsArch());
 				e.setCpuUsedPercent(runtimeInfo.getCpusUsedPercent());
 				e.setDiskUsedPercent(runtimeInfo.getDisksUsedPercent());
+				e.setOsVendorName(runtimeInfo.getOsVendorName());
+				e.setOsVersion(runtimeInfo.getOsVersion());
 			}
 
 			executorInfos.add(e);
 		}
 		return executorInfos;
+	}
+
+	public ExecutorDetails findExecutor(String executorId) {
+		ExecutorDetails details = new ExecutorDetails();
+		details.setId(executorId);
+
+		String runtimeJson = zkClient.readData(ZKUtils.buildExecutorIDPath(executorId), true);
+		if (StringUtils.isNotBlank(runtimeJson)) {
+			RuntimeInfo runtimeInfo = JSON.parseObject(runtimeJson, RuntimeInfo.class);
+			details.setRuntime(runtimeInfo);
+		}
+		return details;
 	}
 
 	public int countExecutors() {
@@ -181,14 +191,15 @@ public class MyJobsServiceImpl implements MyJobsService {
 				e.setId(executor);
 
 				String runtimeJson = zkClient.readData(ZKUtils.buildExecutorIDPath(executor), true);
-				if (StringUtils.isNoneBlank(runtimeJson)) {
+				if (StringUtils.isNotBlank(runtimeJson)) {
 					RuntimeInfo runtimeInfo = JSON.parseObject(runtimeJson, RuntimeInfo.class);
-					e.setId(runtimeInfo.getIp());
 					e.setHost(runtimeInfo.getHostName());
 					e.setIp(runtimeInfo.getIp());
 					e.setArch(runtimeInfo.getOsArch());
 					e.setCpuUsedPercent(runtimeInfo.getCpusUsedPercent());
 					e.setDiskUsedPercent(runtimeInfo.getDisksUsedPercent());
+					e.setOsVendorName(runtimeInfo.getOsVendorName());
+					e.setOsVersion(runtimeInfo.getOsVersion());
 				}
 				executors.add(e);
 			}
@@ -212,5 +223,15 @@ public class MyJobsServiceImpl implements MyJobsService {
 		} catch (Exception e) {
 			return executions;
 		}
+	}
+
+	public MasterInfo findMaster() {
+		UUID masterId = zkClient.readData(ZKUtils.Path.MasterNode.build(), true);
+		if (masterId == null) {
+			return null;
+		}
+		MasterInfo masterInfo = new MasterInfo();
+		masterInfo.setId(masterId.toString());
+		return masterInfo;
 	}
 }

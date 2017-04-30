@@ -1,9 +1,11 @@
 package com.dimogo.open.myjobs.manager.admin.controller;
 
+import com.dimogo.open.myjobs.dto.ExecutorDetails;
 import com.dimogo.open.myjobs.dto.ExecutorInfo;
 import com.dimogo.open.myjobs.manager.admin.service.MyJobsService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -34,6 +36,20 @@ public class Executors {
 			model.addAttribute("previous", start - pageSize);
 		}
 		return "executors";
+	}
+
+	@RequestMapping(value = "/executor/{executorId}/")
+	public String executor(ModelMap model, @PathVariable("executorId") String executorId) {
+		ExecutorDetails details = service.findExecutor(executorId);
+		model.addAttribute("executor", details);
+		if (details.getRuntime() != null) {
+			model.addAttribute("cpus", details.getRuntime().getCpus());
+			model.addAttribute("disks", details.getRuntime().getDisks());
+			model.addAttribute("nets", details.getRuntime().getNets());
+			model.addAttribute("ethernets", details.getRuntime().getEthernets());
+			model.addAttribute("properties", details.getRuntime().getSystemProperties());
+		}
+		return "executor";
 	}
 
 	public void setService(MyJobsService service) {

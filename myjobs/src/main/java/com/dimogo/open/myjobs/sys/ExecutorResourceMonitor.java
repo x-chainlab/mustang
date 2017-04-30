@@ -16,7 +16,8 @@ public class ExecutorResourceMonitor implements Runnable {
 			try {
 				RuntimeInfo runtimeInfo = new RuntimeInfo();
 				runtimeInfo.setup();
-				zkClient.writeData(path, JSON.toJSONString(runtimeInfo));
+				String data = JSON.toJSONString(runtimeInfo);
+				zkClient.writeData(path, data);
 				Thread.sleep(Config.getResourceMonitorInterval());
 			} catch (InterruptedException e) {
 				break;
