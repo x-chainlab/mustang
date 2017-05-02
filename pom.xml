@@ -459,4 +459,15 @@
         </dependency>
     </dependencies>
 
+    <repositories>
+        <repository>
+            <id>Redhat GA</id>
+            <url>https://maven.repository.redhat.com/ga/</url>
+        </repository>
+        <repository>
+            <id>Spring Release</id>
+            <url>http://repo.spring.io/release/</url>
+        </repository>
+    </repositories>
+
 </project>
