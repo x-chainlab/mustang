@@ -12,16 +12,20 @@ public class ExecutorResourceMonitor implements Runnable {
 	public void run() {
 		ZkClient zkClient = ZKUtils.newClient();
 		String path = ZKUtils.buildExecutorIDPath();
-		while (true) {
-			try {
-				RuntimeInfo runtimeInfo = new RuntimeInfo();
-				runtimeInfo.setup();
-				String data = JSON.toJSONString(runtimeInfo);
-				zkClient.writeData(path, data);
-				Thread.sleep(Config.getResourceMonitorInterval());
-			} catch (InterruptedException e) {
-				break;
+		try {
+			while (true) {
+				try {
+					RuntimeInfo runtimeInfo = new RuntimeInfo();
+					runtimeInfo.setup();
+					String data = JSON.toJSONString(runtimeInfo);
+					zkClient.writeData(path, data);
+					Thread.sleep(Config.getResourceMonitorInterval());
+				} catch (InterruptedException e) {
+					break;
+				}
 			}
+		} finally {
+			zkClient.close();
 		}
 	}
 }

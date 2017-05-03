@@ -11,9 +11,9 @@ import javax.servlet.ServletContextListener;
  * Created by Ethan Xiao on 2017/4/6.
  */
 public class InitSystemListener implements ServletContextListener {
-	private ZkClient zkClient;
 
 	public void contextInitialized(ServletContextEvent servletContextEvent) {
+		ZkClient zkClient = null;
 		try {
 			zkClient = ZKUtils.newClient();
 			ZKUtils.create(zkClient, ZKUtils.Path.Root.build(), null, CreateMode.PERSISTENT);
@@ -21,15 +21,16 @@ public class InitSystemListener implements ServletContextListener {
 			ZKUtils.create(zkClient, ZKUtils.Path.Jobs.build(), null, CreateMode.PERSISTENT);
 			ZKUtils.create(zkClient, ZKUtils.Path.Executors.build(), null, CreateMode.PERSISTENT);
 			ZKUtils.create(zkClient, ZKUtils.Path.Notifications.build(), null, CreateMode.PERSISTENT);
-			zkClient.createEphemeral(ZKUtils.buildExecutorIDPath());
 		} catch (Throwable e) {
 			e.printStackTrace();
+		} finally {
+			if (zkClient != null) {
+				zkClient.close();
+			}
 		}
 	}
 
 	public void contextDestroyed(ServletContextEvent servletContextEvent) {
-		if (zkClient != null) {
-			zkClient.close();
-		}
+
 	}
 }
