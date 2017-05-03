@@ -61,6 +61,20 @@ public class ClusteredJobs {
 		return getClusteredJob(model, jobName);
 	}
 
+	@RequestMapping(value = "/deleteclusteredjob/{jobName}", method = RequestMethod.GET)
+	public String deleteClusteredJob(ModelMap model, @PathVariable("jobName") String jobName) {
+		ClusteredJobInfo job = service.findJob(jobName);
+		model.addAttribute("jobInfo", job);
+		model.addAttribute("jobParameters", JobUtils.jsonToParameterList(JSON.parseObject(job.getParas())));
+		model.addAttribute("jobExecutors", service.listJobExecutors(jobName));
+		model.addAttribute("jobExecutions", service.listJobExecutions(jobName));
+
+		boolean delete = service.deleteJob(jobName);
+		job.setExists(!delete);
+		model.addAttribute("deleted", delete);
+		return "clusteredjob";
+	}
+
 	public void setService(MyJobsService service) {
 		this.service = service;
 	}
