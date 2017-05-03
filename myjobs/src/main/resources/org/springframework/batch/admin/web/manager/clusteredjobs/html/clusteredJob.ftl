@@ -72,7 +72,8 @@
                     <td><#if executor.arch??>${executor.arch}</#if></td>
                     <td>${executor.cpuUsedPercent}%</td>
                     <td>${executor.diskUsedPercent}%</td>
-                    <td>${executor.osVendorName}&nbsp;${executor.osVersion}</td>
+                    <td><#if executor.osVendorName??>${executor.osVendorName}</#if>&nbsp;<#if executor.osVersion??>${executor
+            .osVersion}</#if></td>
                 </tr>
             </#list>
         </table>
