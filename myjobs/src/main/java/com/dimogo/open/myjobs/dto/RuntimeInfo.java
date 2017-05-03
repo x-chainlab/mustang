@@ -5,10 +5,7 @@ import org.hyperic.sigar.*;
 
 import java.net.InetAddress;
 import java.net.UnknownHostException;
-import java.util.Date;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Created by Ethan Xiao on 2017/4/27.
@@ -48,6 +45,7 @@ public class RuntimeInfo {
 	private List<NetRuntimeInfo> nets;
 	private List<EthernetRuntimeInfo> ethernets;
 	private Map<String, String> systemProperties;
+	private Map<String, String> systemEnv;
 
 	public Date getTime() {
 		return time;
@@ -265,6 +263,14 @@ public class RuntimeInfo {
 		return systemProperties;
 	}
 
+	public Map<String, String> getSystemEnv() {
+		return systemEnv;
+	}
+
+	public void setSystemEnv(Map<String, String> systemEnv) {
+		this.systemEnv = systemEnv;
+	}
+
 	public double getCpusUsedPercent() {
 		if (CollectionUtils.isEmpty(cpus)) {
 			return 0d;
@@ -307,7 +313,8 @@ public class RuntimeInfo {
 		vmFreeMemory = r.freeMemory();
 		javaAvailableProcessors = r.availableProcessors();
 
-		systemProperties = System.getenv();
+		systemProperties = new LinkedHashMap<String, String>((Map)System.getProperties());
+		systemEnv = System.getenv();
 
 		Sigar sigar;
 		try {

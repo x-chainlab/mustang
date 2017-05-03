@@ -48,6 +48,7 @@ public class Executors {
 			model.addAttribute("nets", details.getRuntime().getNets());
 			model.addAttribute("ethernets", details.getRuntime().getEthernets());
 			model.addAttribute("properties", details.getRuntime().getSystemProperties());
+			model.addAttribute("env", details.getRuntime().getSystemEnv());
 		}
 		return "executor";
 	}

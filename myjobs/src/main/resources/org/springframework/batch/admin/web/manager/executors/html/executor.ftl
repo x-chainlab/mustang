@@ -244,5 +244,29 @@
             </#list>
         </table>
     </#if>
+    <#if env?? && env?size!=0>
+        <p>
+
+        <h3>System Environment:</h3></p>
+        <table class="bordered-table">
+            <tr>
+                <th>Index</th>
+                <th>Name</th>
+                <th>Value</th>
+            </tr>
+            <#list env?keys as key>
+                <#if key_index % 2 == 0>
+                    <#assign rowClass="name-sublevel1-even"/>
+                <#else>
+                    <#assign rowClass="name-sublevel1-odd"/>
+                </#if>
+                <tr class="${rowClass}">
+                    <td>${key_index + 1}</td>
+                    <td>${key}</td>
+                    <td><#if env[key]??>${env[key]}</#if></td>
+                </tr>
+            </#list>
+        </table>
+    </#if>
 </div>
 </#escape>
