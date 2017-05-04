@@ -19,6 +19,18 @@ import java.util.Set;
  */
 public class MyJobMaster implements Runnable {
 
+	private static class MyJobMasterHolder {
+		private static MyJobMaster instance = new MyJobMaster();
+	}
+
+	public static MyJobMaster getInstance() {
+		return MyJobMasterHolder.instance;
+	}
+
+	private MyJobMaster() {
+
+	}
+
 	public void run() {
 		while (true) {
 			ZKUtils.ZkExclusiveLock lock = new ZKUtils.ZkExclusiveLock();

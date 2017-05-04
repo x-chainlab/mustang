@@ -12,6 +12,15 @@ import java.util.List;
  * Created by ethanx on 2017/5/3.
  */
 public class MyJobExecutor implements Runnable {
+
+	private static class MyJobExecutorHolder {
+		private static MyJobExecutor instance = new MyJobExecutor();
+	}
+
+	public static MyJobExecutor getInstance() {
+		return MyJobExecutorHolder.instance;
+	}
+
 	public void run() {
 		ZkClient zkClient = null;
 		try {

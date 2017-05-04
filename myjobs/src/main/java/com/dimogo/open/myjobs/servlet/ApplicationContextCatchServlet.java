@@ -24,10 +24,10 @@ public class ApplicationContextCatchServlet extends HttpServlet {
 		WebApplicationContext context = WebApplicationContextUtils.getWebApplicationContext(getServletContext());
 		ApplicationContextCatcher.getInstance().set(context);
 
-		Thread masterThread = new Thread(new MyJobMaster());
-		Thread slaveThread = new Thread(new MyJobSlave());
-		Thread monitorThread = new Thread(new ExecutorResourceMonitor());
-		Thread executorThread = new Thread(new MyJobExecutor());
+		Thread masterThread = new Thread(MyJobMaster.getInstance());
+		Thread slaveThread = new Thread(MyJobSlave.getInstance());
+		Thread monitorThread = new Thread(ExecutorResourceMonitor.getInstance());
+		Thread executorThread = new Thread(MyJobExecutor.getInstance());
 		executorThread.start();
 		masterThread.start();
 		slaveThread.start();

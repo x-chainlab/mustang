@@ -75,6 +75,21 @@ public class ClusteredJobs {
 		return "clusteredjob";
 	}
 
+	@RequestMapping(value = "/pausejobtrigger/{jobName}", method = RequestMethod.GET)
+	public String pauseJobTrigger(ModelMap model, @PathVariable("jobName") String jobName) {
+		return "";
+	}
+
+	@RequestMapping(value = "/resumejobtrigger/{jobName}", method = RequestMethod.GET)
+	public String resumeJobTrigger(ModelMap model, @PathVariable("jobName") String jobName) {
+		return "";
+	}
+
+	@RequestMapping(value = "/stopclusteredjob/{jobName}", method = RequestMethod.GET)
+	public String stopClusteredJob(ModelMap model, @PathVariable("jobName") String jobName) {
+		return "";
+	}
+
 	public void setService(MyJobsService service) {
 		this.service = service;
 	}
