@@ -25,6 +25,8 @@ public interface MyJobsService {
 
 	ClusteredJobInfo findJob(String jobName);
 
+	boolean deleteJob(String jobName);
+
 	void updateJob(ClusteredJobInfo jobInfo);
 
 	List<ExecutorInfo> listJobExecutors(String job);

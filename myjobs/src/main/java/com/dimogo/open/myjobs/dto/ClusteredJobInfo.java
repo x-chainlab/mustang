@@ -5,12 +5,21 @@ package com.dimogo.open.myjobs.dto;
  */
 public class ClusteredJobInfo {
 
+	private boolean exists = false;
 	private String jobName = "";
 	private String cron = "";
 	private String paras = "";
 	private int executors = 0;
 	private int executions = 0;
 	private int maxInstances = 0;
+
+	public boolean isExists() {
+		return exists;
+	}
+
+	public void setExists(boolean exists) {
+		this.exists = exists;
+	}
 
 	public String getJobName() {
 		return jobName;
