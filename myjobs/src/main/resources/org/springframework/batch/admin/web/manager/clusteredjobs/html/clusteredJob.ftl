@@ -3,22 +3,38 @@
 <h2>Clustered Job Configurations</h2>
 <div id="job">
     <#if jobInfo??>
-        <p/>
+        <p><font color="red">
+            <#if deleted?? && deleted>
+                The job has been deleted.
+            <#elseif deleted?? && !deleted>
+                Delete the job failure, must stop executions and executors.
+            <#elseif !jobInfo.exists>
+                The job does not exist.
+            </#if>
+        </font></p>
         <#assign details_url><@spring.url relativeUrl="${servletPath}/clusteredjob/${jobInfo.jobName}/"/></#assign>
+        <#assign delete_url><@spring.url relativeUrl="${servletPath}/deleteclusteredjob/${jobInfo.jobName}/"/></#assign>
         <form id="detailForm" action="${details_url}" method="POST" enctype="application/x-www-form-urlencoded">
             <ol>
-                <li><label for="jobName">Job Name</label><input readonly type="text" name="jobName" id="jobName" value="${jobInfo.jobName}"></li>
+                <li><label for="jobName">Job Name</label><input readonly type="text" name="jobName" id="jobName" value="${jobInfo.jobName}">
+                </li>
                 <li><label for="jobExecutors">Job Executors</label><span id="jobExecutors">${jobInfo.executors}</span></li>
                 <li><label for="jobExecutions">Job Executions</label><span id="jobExecutions">${jobInfo.executions}</span></li>
-                <li><label for="cronExpression">Cron Expression</label><input type="text" id="cronExpression" name="cron" value="${jobInfo.cron}"></li>
-                <li><label for="maxInstances">Instance Limit</label><input type="number" id="maxInstances" name="maxInstances" value="${jobInfo.maxInstances}"></li>
+                <li><label for="cronExpression">Cron Expression</label><input type="text" id="cronExpression" name="cron"
+                                                                              value="${jobInfo.cron}"></li>
+                <li><label for="maxInstances">Instance Limit</label><input type="number" id="maxInstances" name="maxInstances"
+                                                                           value="${jobInfo.maxInstances}"></li>
                 <li><label for="jobParameters">Job Parameters (key=value
                     pairs)</label><textarea id="jobParameters" name="paras"
                                             class="jobParameters"><#if jobParameters??>${jobParameters}</#if></textarea>
                 </li>
-                <li><label>Settings</label><input id="saveSettings" type="submit" value="Save Settings"/>
-                    <input type="hidden" name="origin" value="clusteredjob"/>
-                </li>
+                <#if jobInfo.exists>
+                    <li><label>Settings</label><input id="saveSettings" type="submit" value="Save Settings"/>
+                        <input type="hidden" name="origin" value="clusteredjob"/>
+                    </li>
+                    <li><label for="deleteThisJob">Delete Config</label><input id="deleteThisJob" type="button" value="Delete Job"
+                                                                               onclick="location.href='${delete_url}'"/></li>
+                </#if>
             </ol>
         </form>
         <br/>
@@ -72,7 +88,8 @@
                     <td><#if executor.arch??>${executor.arch}</#if></td>
                     <td>${executor.cpuUsedPercent}%</td>
                     <td>${executor.diskUsedPercent}%</td>
-                    <td>${executor.osVendorName}&nbsp;${executor.osVersion}</td>
+                    <td><#if executor.osVendorName??>${executor.osVendorName}</#if>&nbsp;<#if executor.osVersion??>${executor
+                    .osVersion}</#if></td>
                 </tr>
             </#list>
         </table>

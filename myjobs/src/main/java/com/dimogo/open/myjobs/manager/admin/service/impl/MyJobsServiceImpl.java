@@ -9,6 +9,7 @@ import com.dimogo.open.myjobs.utils.JobUtils;
 import com.dimogo.open.myjobs.utils.ListUtils;
 import com.dimogo.open.myjobs.utils.ZKUtils;
 import org.I0Itec.zkclient.ZkClient;
+import org.I0Itec.zkclient.exception.ZkNodeExistsException;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.MapUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -146,6 +147,7 @@ public class MyJobsServiceImpl implements MyJobsService {
 	}
 
 	public ClusteredJobInfo findJob(String jobName) {
+		boolean exists = zkClient.exists(ZKUtils.buildJobPath(jobName));
 		int executors = zkClient.countChildren(ZKUtils.buildJobExecutorsPath(jobName));
 		int executions = zkClient.countChildren(ZKUtils.buildJobExecutionsPath(jobName));
 		Integer instances = zkClient.readData(ZKUtils.buildJobInstancesPath(jobName), true);
@@ -153,6 +155,7 @@ public class MyJobsServiceImpl implements MyJobsService {
 		String paras = zkClient.readData(ZKUtils.buildJobParasPath(jobName), true);
 
 		ClusteredJobInfo jobInfo = new ClusteredJobInfo();
+		jobInfo.setExists(exists);
 		jobInfo.setJobName(jobName);
 		jobInfo.setExecutors(executors);
 		jobInfo.setExecutions(executions);
@@ -168,13 +171,31 @@ public class MyJobsServiceImpl implements MyJobsService {
 		return jobInfo;
 	}
 
+	public boolean deleteJob(String jobName) {
+		int executors = zkClient.countChildren(ZKUtils.buildJobExecutorsPath(jobName));
+		int executions = zkClient.countChildren(ZKUtils.buildJobExecutionsPath(jobName));
+		if (executions != 0 || executors != 0) {
+			return false;
+		}
+		try {
+			return zkClient.deleteRecursive(ZKUtils.buildJobPath(jobName));
+		} catch (Throwable e) {
+			return false;
+		}
+	}
+
 	public void updateJob(ClusteredJobInfo jobInfo) {
 		String paras = JSON.toJSONString(JobUtils.parameterListToJson(jobInfo.getParas()));
 		jobInfo.setParas(paras);
 		jobInfo.setCron(StringUtils.trim(jobInfo.getCron()));
 
 		JobUtils.setConfJobParas(jobInfo.getJobName(), jobInfo.getParas());
-		zkClient.writeData(ZKUtils.buildJobInstancesPath(jobInfo.getJobName()), jobInfo.getMaxInstances());
+		String instancePath = ZKUtils.buildJobInstancesPath(jobInfo.getJobName());
+		if (zkClient.exists(instancePath)) {
+			zkClient.writeData(ZKUtils.buildJobInstancesPath(jobInfo.getJobName()), jobInfo.getMaxInstances());
+		} else {
+			zkClient.create(ZKUtils.buildJobInstancesPath(jobInfo.getJobName()), jobInfo.getMaxInstances(), CreateMode.PERSISTENT);
+		}
 		if (StringUtils.isNoneBlank(jobInfo.getCron())) {
 			JobUtils.setJobCronExpression(jobInfo.getJobName(), jobInfo.getCron());
 		} else {

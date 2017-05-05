@@ -12,6 +12,19 @@ import java.util.concurrent.LinkedBlockingQueue;
  * Created by Ethan Xiao on 2017/4/17.
  */
 public class MyJobSlave implements Runnable {
+
+	private static class MyJobSlaveHolder {
+		private static MyJobSlave instance = new MyJobSlave();
+	}
+
+	public static MyJobSlave getInstance() {
+		return MyJobSlaveHolder.instance;
+	}
+
+	private MyJobSlave() {
+
+	}
+
 	public void run() {
 		ZkClient zkClient = ZKUtils.newClient();
 		try {

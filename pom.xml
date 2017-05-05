@@ -7,7 +7,7 @@
     <groupId>com.dimogo.open.mustang</groupId>
     <artifactId>mustang</artifactId>
     <packaging>pom</packaging>
-    <version>1.0</version>
+    <version>1.3</version>
     <modules>
         <module>myjobs</module>
         <module>hello-jar</module>
@@ -41,7 +41,7 @@
         <profile>
             <id>release</id>
             <properties>
-                <mustang.version>1.0</mustang.version>
+                <mustang.version>1.3</mustang.version>
             </properties>
             <activation>
                 <activeByDefault>false</activeByDefault>
@@ -50,7 +50,7 @@
         <profile>
             <id>dev</id>
             <properties>
-                <mustang.version>1.0-SNAPSHOT</mustang.version>
+                <mustang.version>1.3-SNAPSHOT</mustang.version>
             </properties>
             <activation>
                 <activeByDefault>true</activeByDefault>
@@ -62,12 +62,12 @@
         <repository>
             <id>nexus3-dimogo</id>
             <name>Nexus Release Repository</name>
-            <url>http://www.dimogo.com:10010/repository/dimogo/</url>
+            <url>http://mvn.dimogo.com:10010/repository/dimogo/</url>
         </repository>
         <snapshotRepository>
             <id>nexus3-dimogo</id>
             <name>Nexus Snapshot Repository</name>
-            <url>http://www.dimogo.com:10010/repository/dimogo/</url>
+            <url>http://mvn.dimogo.com:10010/repository/dimogo/</url>
         </snapshotRepository>
     </distributionManagement>
 
@@ -463,5 +463,16 @@
             <version>3.5</version>
         </dependency>
     </dependencies>
+
+    <repositories>
+        <repository>
+            <id>Redhat GA</id>
+            <url>https://maven.repository.redhat.com/ga/</url>
+        </repository>
+        <repository>
+            <id>Spring Release</id>
+            <url>http://repo.spring.io/release/</url>
+        </repository>
+    </repositories>
 
 </project>
