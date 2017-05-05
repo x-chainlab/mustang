@@ -86,6 +86,10 @@ public class ZKUtils {
 		return buildJobExecutorsPath(job) + "/" + executor;
 	}
 
+	public static String buildJobPauseTrigger(String job) {
+		return Path.Jobs.build() + "/" + job + "/pause";
+	}
+
 	public static String buildExecutorIDPath() {
 		return Path.Executors.build() + "/" + ID.ExecutorID;
 	}

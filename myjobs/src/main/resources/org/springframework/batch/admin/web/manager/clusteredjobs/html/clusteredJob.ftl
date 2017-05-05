@@ -8,12 +8,15 @@
                 The job has been deleted.
             <#elseif deleted?? && !deleted>
                 Delete the job failure, must stop executions and executors.
+            <#elseif stopJob?? && stopJob>
+                Stop running command has been sent.
             <#elseif !jobInfo.exists>
                 The job does not exist.
             </#if>
         </font></p>
         <#assign details_url><@spring.url relativeUrl="${servletPath}/clusteredjob/${jobInfo.jobName}/"/></#assign>
         <#assign delete_url><@spring.url relativeUrl="${servletPath}/deleteclusteredjob/${jobInfo.jobName}/"/></#assign>
+        <#assign stop_url><@spring.url relativeUrl="${servletPath}/stopclusteredjob/${jobInfo.jobName}/"/></#assign>
         <form id="detailForm" action="${details_url}" method="POST" enctype="application/x-www-form-urlencoded">
             <ol>
                 <li><label for="jobName">Job Name</label><input readonly type="text" name="jobName" id="jobName" value="${jobInfo.jobName}">
@@ -34,6 +37,17 @@
                     </li>
                     <li><label for="deleteThisJob">Delete Config</label><input id="deleteThisJob" type="button" value="Delete Job"
                                                                                onclick="location.href='${delete_url}'"/></li>
+                    <li><label for="stopThisJob">Stop Config</label><input id="stopThisJob" type="button" value="Stop Job"
+                                                                               onclick="location.href='${stop_url}'"/></li>
+                    <li><label for="jobTrigger">Job Trigger</label>
+                    <#if jobInfo.pauseTrigger>
+                        <#assign resume_url><@spring.url relativeUrl="${servletPath}/resumejobtrigger/${jobInfo.jobName}/"/></#assign>
+                        <input id="jobTrigger" type="button" value="Resume Job Trigger" onclick="location.href='${resume_url}'"/>
+                    <#else>
+                        <#assign pause_url><@spring.url relativeUrl="${servletPath}/pausejobtrigger/${jobInfo.jobName}/"/></#assign>
+                        <input id="jobTrigger" type="button" value="Pause Job Trigger" onclick="location.href='${pause_url}'"/>
+                    </#if>
+                    </li>
                 </#if>
             </ol>
         </form>

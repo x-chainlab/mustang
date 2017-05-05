@@ -1,6 +1,6 @@
 package com.dimogo.open.myjobs.types;
 
-import com.dimogo.open.myjobs.dispatch.NotificationDispatcher;
+import com.dimogo.open.myjobs.notification.NotificationProcessor;
 import com.dimogo.open.myjobs.servlet.ApplicationContextCatcher;
 
 import java.util.Map;
@@ -9,21 +9,23 @@ import java.util.Map;
  * Created by Ethan Xiao on 2017/4/15.
  */
 public enum NotificationType {
-	RunJob("runJobDispatcher"),
-	StopJob,
+	RunJob("runJobProcessor"),
+	StopJob("stopJobProcessor"),
+	PauseTrigger("pauseTriggerProcessor"),
+	ResumeTrigger("resumeTriggerProcessor"),
 	;
 
-	private NotificationDispatcher dispatcher;
+	private NotificationProcessor dispatcher;
 
 	NotificationType() {
 
 	}
 
 	NotificationType(String dispatcherName) {
-		this.dispatcher = (NotificationDispatcher) ApplicationContextCatcher.getInstance().get().getBean(dispatcherName);
+		this.dispatcher = (NotificationProcessor) ApplicationContextCatcher.getInstance().get().getBean(dispatcherName);
 	}
 
-	NotificationType(NotificationDispatcher dispatcher) {
+	NotificationType(NotificationProcessor dispatcher) {
 		this.dispatcher = dispatcher;
 	}
 

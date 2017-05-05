@@ -35,6 +35,8 @@ public class MyJobLauncher extends SimpleJobLauncher {
 		if (job.getJobParametersIncrementer() != null) {
 			jobParameters = job.getJobParametersIncrementer().getNext(jobParameters);
 		}
-		return super.run(job, jobParameters);
+		JobExecution execution = super.run(job, jobParameters);
+		ExecutionManager.getInstance().register(execution);
+		return execution;
 	}
 }
