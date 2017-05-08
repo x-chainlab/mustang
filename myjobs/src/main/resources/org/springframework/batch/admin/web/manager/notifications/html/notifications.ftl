@@ -18,7 +18,7 @@
 					</#if>
 					<tr class="${rowClass}">
 						<td>${notification.name}</td>
-						<td>${notification.paras}</td>
+						<td><#if notification.paras??>${notification.paras}</#if></td>
 					</tr>
 				</#list>
 			</table>
@@ -31,7 +31,7 @@
 			</ul>
 
 	<#else>
-		<p>There are no notifications.</p>
+		<p>There are no notifications waiting to be processed.</p>
 	</#if>
 
 </div><!-- jobs -->

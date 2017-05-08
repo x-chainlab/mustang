@@ -9,7 +9,7 @@
             <#elseif deleted?? && !deleted>
                 Delete the job failure, must stop executions and executors.
             <#elseif stopJob?? && stopJob>
-                Stop running command has been sent.
+                Stop running notification has been sent.
             <#elseif !jobInfo.exists>
                 The job does not exist.
             </#if>
@@ -37,7 +37,7 @@
                     </li>
                     <li><label for="deleteThisJob">Delete Config</label><input id="deleteThisJob" type="button" value="Delete Job"
                                                                                onclick="location.href='${delete_url}'"/></li>
-                    <li><label for="stopThisJob">Stop Config</label><input id="stopThisJob" type="button" value="Stop Job"
+                    <li><label for="stopThisJob">Stop Job</label><input id="stopThisJob" type="button" value="Stop Job"
                                                                                onclick="location.href='${stop_url}'"/></li>
                     <li><label for="jobTrigger">Job Trigger</label>
                     <#if jobInfo.pauseTrigger>

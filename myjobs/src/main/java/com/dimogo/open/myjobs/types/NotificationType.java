@@ -9,20 +9,22 @@ import java.util.Map;
  * Created by Ethan Xiao on 2017/4/15.
  */
 public enum NotificationType {
-	RunJob("runJobProcessor"),
-	StopJob("stopJobProcessor"),
-	PauseTrigger("pauseTriggerProcessor"),
-	ResumeTrigger("resumeTriggerProcessor"),
+	RunJob("runJobProcessor", true, false, false),
+	StopJob("stopJobProcessor", false, false, true),
+	PauseTrigger("pauseTriggerProcessor", true, true, false),
+	ResumeTrigger("resumeTriggerProcessor", true, true, false),
 	;
 
 	private NotificationProcessor dispatcher;
+	private boolean forMaster;
+	private boolean forAllSlaves;
+	private boolean needLock;
 
-	NotificationType() {
-
-	}
-
-	NotificationType(String dispatcherName) {
+	NotificationType(String dispatcherName, boolean needLock, boolean forMaster, boolean forAllSlaves) {
 		this.dispatcher = (NotificationProcessor) ApplicationContextCatcher.getInstance().get().getBean(dispatcherName);
+		this.needLock = needLock;
+		this.forAllSlaves = forAllSlaves;
+		this.forMaster = forMaster;
 	}
 
 	NotificationType(NotificationProcessor dispatcher) {
@@ -34,5 +36,17 @@ public enum NotificationType {
 			return;
 		}
 		dispatcher.dispatch(paras);
+	}
+
+	public boolean isNeedLock() {
+		return needLock;
+	}
+
+	public boolean isForMaster() {
+		return forMaster;
+	}
+
+	public boolean isForAllSlaves() {
+		return forAllSlaves;
 	}
 }

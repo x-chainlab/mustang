@@ -5,10 +5,16 @@ import com.dimogo.open.myjobs.types.NotificationType;
 import com.dimogo.open.myjobs.utils.ID;
 import com.dimogo.open.myjobs.utils.ZKUtils;
 import org.I0Itec.zkclient.ZkClient;
+import org.I0Itec.zkclient.exception.ZkNoNodeException;
+import org.I0Itec.zkclient.exception.ZkNodeExistsException;
+import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.collections.MapUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.zookeeper.KeeperException;
 
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 import java.util.concurrent.BlockingQueue;
 
 /**
@@ -33,20 +39,48 @@ public class MyJobDispatcher implements Runnable {
 						if (!zkClient.exists(notificationPath)) {
 							continue;
 						}
+						Map<String, String> notificationParas = zkClient.readData(notificationPath, true);
+						if (MapUtils.isEmpty(notificationParas)) {
+							continue;
+						}
+						String type = notificationParas.get(NotificationParaType.NotificationType.name());
+						if (StringUtils.isBlank(type)) {
+							continue;
+						}
+
+						NotificationType notificationType = NotificationType.valueOf(type);
+						boolean deleteNotification = false;
+						if (notificationType.isNeedLock()) {
+							deleteNotification = lock(notificationType, notification, zkClient, notificationParas);
+						} else {
+							deleteNotification = nonLock(zkClient, notificationType, notification, notificationParas);
+						}
+
+						if (!deleteNotification) {
+							continue;
+						}
+						if (!notificationType.isForAllSlaves() || notificationType.isForMaster()) {
+							try {
+								zkClient.deleteRecursive(notificationPath);
+							} catch (Throwable e) {
+								e.printStackTrace();
+							}
+							continue;
+						}
 						try {
-							zkClient.createEphemeral(ZKUtils.buildNotificationLockPath(notification), ID.ExecutorID);
+							if (CollectionUtils.isNotEmpty(zkClient.getChildren(ZKUtils.buildNotificationSlavesPath(notification)))) {
+								continue;
+							}
+						} catch (ZkNoNodeException e) {
+							//delete notification
 						} catch (Throwable e) {
 							continue;
 						}
-						Map<String, String> notificationParas = zkClient.readData(notificationPath, true);
-						if (notificationParas == null) {
-							continue;
-						}
-						doDispatch(notificationParas);
+
 						try {
 							zkClient.deleteRecursive(notificationPath);
 						} catch (Throwable e) {
-							continue;
+							e.printStackTrace();
 						}
 					}
 				} catch (InterruptedException e) {
@@ -59,16 +93,60 @@ public class MyJobDispatcher implements Runnable {
 		}
 	}
 
-	private void doDispatch(Map<String, String> paras) {
-		String type = paras.get(NotificationParaType.NotificationType.name());
-		if (StringUtils.isBlank(type)) {
-			return;
-		}
+	private boolean lock(NotificationType notificationType, String notification, ZkClient zkClient, Map<String, String> paras) {
+		String lockPath = ZKUtils.buildNotificationLockPath(notification);
 		try {
-			NotificationType notificationType = NotificationType.valueOf(type);
-			notificationType.dispatch(paras);
-		} catch (IllegalArgumentException e) {
-			return;
+			return nonLock(zkClient, notificationType, notification, paras);
+		} catch (Throwable e) {
+			e.printStackTrace();
+			return false;
+		} finally {
+			zkClient.deleteRecursive(lockPath);
 		}
 	}
+
+	private boolean nonLock(ZkClient zkClient, NotificationType notificationType, String notification, Map<String, String> paras) {
+		if (notificationType.isForMaster()) {
+			return forMaster(zkClient, notificationType, paras);
+		}
+		if (notificationType.isForAllSlaves()) {
+			return forAllSlaves(zkClient, notificationType, notification, paras);
+		}
+		notificationType.dispatch(paras);
+		return true;
+	}
+
+	private boolean forMaster(ZkClient zkClient, NotificationType notificationType, Map<String, String> paras) {
+		UUID masterId = zkClient.readData(ZKUtils.Path.MasterNode.build(), true);
+		if (!ID.ExecutorID.equals(masterId)) {
+			return false;
+		}
+		notificationType.dispatch(paras);
+		return true;
+	}
+
+	private boolean forAllSlaves(ZkClient zkClient, NotificationType notificationType, String notification, Map<String, String> paras) {
+		List<String> salves = null;
+		try {
+			salves = zkClient.getChildren(ZKUtils.buildNotificationSlavesPath(notification));
+		} catch (ZkNoNodeException e) {
+			return true;
+		} catch (Throwable e) {
+			return false;
+		}
+		if (CollectionUtils.isEmpty(salves)) {
+			return true;
+		}
+		if (!salves.contains(ID.ExecutorID.toString())) {
+			return false;
+		}
+		try {
+			zkClient.deleteRecursive(ZKUtils.buildNotificationSlavePath(notification, ID.ExecutorID.toString()));
+		} catch (Throwable e) {
+			return false;
+		}
+		notificationType.dispatch(paras);
+		return true;
+	}
+
 }

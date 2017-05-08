@@ -11,6 +11,10 @@ import org.apache.zookeeper.CreateMode;
  */
 public class ZKUtils {
 
+	private static class SerializableSerializerHolder {
+		private static SerializableSerializer serializableSerializer = new SerializableSerializer();
+	}
+
 	public enum Path {
 		Root("/mustang", null),
 		MyJobs("/myjobs", Root),
@@ -43,8 +47,12 @@ public class ZKUtils {
 		}
 	}
 
+	public static SerializableSerializer getSerializableSerializer() {
+		return SerializableSerializerHolder.serializableSerializer;
+	}
+
 	public static ZkClient newClient() {
-		return new ZkClient(Config.getZKServers(), Config.getZKSessionTimeout(), Config.getZKConnTimeout(), new SerializableSerializer());
+		return new ZkClient(Config.getZKServers(), Config.getZKSessionTimeout(), Config.getZKConnTimeout(), getSerializableSerializer());
 	}
 
 	public static void create(ZkClient zkClient, String path, Object data, CreateMode mode) throws Exception {
@@ -76,6 +84,14 @@ public class ZKUtils {
 
 	public static String buildNotificationLockPath(String notification) {
 		return buildNotificationPath(notification) + "/locked";
+	}
+
+	public static String buildNotificationSlavesPath(String notification) {
+		return buildNotificationPath(notification) + "/slaves";
+	}
+
+	public static String buildNotificationSlavePath(String notification, String slave) {
+		return buildNotificationPath(notification) + "/slaves/" + slave;
 	}
 
 	public static String buildJobExecutorsPath(String job) {

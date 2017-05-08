@@ -271,7 +271,16 @@ public class MyJobsServiceImpl implements MyJobsService {
 		message.put(NotificationParaType.JobName.name(), jobName);
 
 		try {
-			JobUtils.sendJobNotification(jobName, NotificationType.StopJob.name(), message);
+			List<String> jobExecutions = zkClient.getChildren(ZKUtils.buildJobExecutionsPath(jobName));
+			Set<String> jobExecutors = new HashSet<String>(jobExecutions.size());
+			for (String execution : jobExecutions) {
+				JobExecutionDTO executionDTO = zkClient.readData(ZKUtils.buildJobExecutionPath(jobName, execution), true);
+				if (executionDTO == null) {
+					continue;
+				}
+				jobExecutors.add(executionDTO.getExecutorId());
+			}
+			JobUtils.sendJobNotification(jobName, NotificationType.StopJob.name(), message, jobExecutors);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -283,7 +292,7 @@ public class MyJobsServiceImpl implements MyJobsService {
 		message.put(NotificationParaType.JobName.name(), jobName);
 
 		try {
-			JobUtils.sendJobNotification(jobName, NotificationType.PauseTrigger.name(), message);
+			JobUtils.sendJobNotification(jobName, NotificationType.PauseTrigger.name(), message, null);
 			zkClient.create(ZKUtils.buildJobPauseTrigger(jobName), null, CreateMode.PERSISTENT);
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -296,7 +305,7 @@ public class MyJobsServiceImpl implements MyJobsService {
 		message.put(NotificationParaType.JobName.name(), jobName);
 
 		try {
-			JobUtils.sendJobNotification(jobName, NotificationType.ResumeTrigger.name(), message);
+			JobUtils.sendJobNotification(jobName, NotificationType.ResumeTrigger.name(), message, null);
 			zkClient.deleteRecursive(ZKUtils.buildJobPauseTrigger(jobName));
 		} catch (Exception e) {
 			e.printStackTrace();
