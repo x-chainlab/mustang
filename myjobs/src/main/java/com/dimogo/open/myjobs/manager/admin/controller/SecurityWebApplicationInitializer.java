@@ -3,7 +3,7 @@ package com.dimogo.open.myjobs.manager.admin.controller;
 import org.springframework.security.web.context.AbstractSecurityWebApplicationInitializer;
 
 /**
- * Created by Auser on 2017/5/5.
+ * Created by Auser on 2017/5/8.
  */
-public class AppInitializer extends AbstractSecurityWebApplicationInitializer {
+public class SecurityWebApplicationInitializer extends AbstractSecurityWebApplicationInitializer {
 }
