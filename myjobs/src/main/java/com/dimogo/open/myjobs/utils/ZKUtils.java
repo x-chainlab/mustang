@@ -102,6 +102,14 @@ public class ZKUtils {
 		return buildJobExecutorsPath(job) + "/" + executor;
 	}
 
+	public static String buildJobHistoriesPath(String job) {
+		return Path.Jobs.build() + "/" + job + "/histories";
+	}
+
+	public static String buildJobHistoryPath(String job, String executionId) {
+		return buildJobHistoriesPath(job) + "/" + executionId;
+	}
+
 	public static String buildJobPauseTrigger(String job) {
 		return Path.Jobs.build() + "/" + job + "/pause";
 	}

@@ -7,7 +7,7 @@
     <groupId>com.dimogo.open.mustang</groupId>
     <artifactId>mustang</artifactId>
     <packaging>pom</packaging>
-    <version>1.3</version>
+    <version>1.4</version>
     <modules>
         <module>myjobs</module>
         <module>hello-jar</module>
@@ -41,7 +41,7 @@
         <profile>
             <id>release</id>
             <properties>
-                <mustang.version>1.3</mustang.version>
+                <mustang.version>1.4</mustang.version>
             </properties>
             <activation>
                 <activeByDefault>false</activeByDefault>
@@ -50,7 +50,7 @@
         <profile>
             <id>dev</id>
             <properties>
-                <mustang.version>1.3-SNAPSHOT</mustang.version>
+                <mustang.version>1.4-SNAPSHOT</mustang.version>
             </properties>
             <activation>
                 <activeByDefault>true</activeByDefault>

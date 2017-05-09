@@ -1,6 +1,7 @@
 package com.dimogo.open.myjobs.listener;
 
 import com.dimogo.open.myjobs.dto.JobExecutionDTO;
+import com.dimogo.open.myjobs.dto.JobHistoryDTO;
 import com.dimogo.open.myjobs.utils.ID;
 import com.dimogo.open.myjobs.utils.ZKUtils;
 import org.I0Itec.zkclient.ZkClient;
@@ -47,9 +48,19 @@ public class JobStatusListener implements JobExecutionListener {
 			UUID executionId = (UUID) jobExecution.getExecutionContext().get(EXECUTION_ID);
 			try {
 				ZkClient zkClient = zkClients.get(executionId);
-				if (zkClient != null) {
-					zkClient.close();
+				if (zkClient == null) {
+					return;
 				}
+				String jobName = jobExecution.getJobInstance().getJobName();
+
+				JobHistoryDTO jobHistoryDTO = new JobHistoryDTO();
+				jobHistoryDTO.setStart(jobExecution.getStartTime());
+				jobHistoryDTO.setEnd(jobExecution.getEndTime());
+				jobHistoryDTO.setStatus(jobExecution.getStatus());
+				jobHistoryDTO.setExitStatus(jobExecution.getExitStatus());
+				ZKUtils.create(zkClient, ZKUtils.buildJobHistoriesPath(jobName), null, CreateMode.PERSISTENT);
+				ZKUtils.create(zkClient, ZKUtils.buildJobHistoryPath(jobName, executionId.toString()), jobHistoryDTO, CreateMode.PERSISTENT);
+				zkClient.close();
 			} catch (Throwable e) {
 				e.printStackTrace();
 			} finally {
