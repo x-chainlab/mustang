@@ -17,6 +17,7 @@
         <#assign details_url><@spring.url relativeUrl="${servletPath}/clusteredjob/${jobInfo.jobName}/"/></#assign>
         <#assign delete_url><@spring.url relativeUrl="${servletPath}/deleteclusteredjob/${jobInfo.jobName}/"/></#assign>
         <#assign stop_url><@spring.url relativeUrl="${servletPath}/stopclusteredjob/${jobInfo.jobName}/"/></#assign>
+        <#assign history_url><@spring.url relativeUrl="${servletPath}/history/${jobInfo.jobName}/"/></#assign>
         <form id="detailForm" action="${details_url}" method="POST" enctype="application/x-www-form-urlencoded">
             <ol>
                 <li><label for="jobName">Job Name</label><input readonly type="text" name="jobName" id="jobName" value="${jobInfo.jobName}">
@@ -27,6 +28,7 @@
                                                                               value="${jobInfo.cron}"></li>
                 <li><label for="maxInstances">Instance Limit</label><input type="number" id="maxInstances" name="maxInstances"
                                                                            value="${jobInfo.maxInstances}"></li>
+                <li><label for="history">Execution History</label><a href="${history_url}"><span id="history">${jobInfo.historyCount}</span></a></li>
                 <li><label for="jobParameters">Job Parameters (key=value
                     pairs)</label><textarea id="jobParameters" name="paras"
                                             class="jobParameters"><#if jobParameters??>${jobParameters}</#if></textarea>

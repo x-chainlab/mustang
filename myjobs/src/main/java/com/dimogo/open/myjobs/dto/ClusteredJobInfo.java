@@ -13,6 +13,15 @@ public class ClusteredJobInfo {
 	private int executors = 0;
 	private int executions = 0;
 	private int maxInstances = 0;
+	private int historyCount = 0;
+
+	public int getHistoryCount() {
+		return historyCount;
+	}
+
+	public void setHistoryCount(int historyCount) {
+		this.historyCount = historyCount;
+	}
 
 	public boolean isPauseTrigger() {
 		return pauseTrigger;

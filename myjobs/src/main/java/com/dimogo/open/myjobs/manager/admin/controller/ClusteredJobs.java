@@ -3,6 +3,7 @@ package com.dimogo.open.myjobs.manager.admin.controller;
 import com.alibaba.fastjson.JSON;
 import com.dimogo.open.myjobs.dto.ClusteredJobInfo;
 import com.dimogo.open.myjobs.dto.ExecutorInfo;
+import com.dimogo.open.myjobs.dto.JobHistoryDTO;
 import com.dimogo.open.myjobs.manager.admin.service.MyJobsService;
 import com.dimogo.open.myjobs.utils.JobUtils;
 import org.springframework.stereotype.Controller;
@@ -92,6 +93,26 @@ public class ClusteredJobs {
 		service.stopJob(jobName);
 		model.addAttribute("stopJob", true);
 		return getClusteredJob(model, jobName);
+	}
+
+	@RequestMapping(value = "/history/{jobName}", method = RequestMethod.GET)
+	public String getExecutionHistory(ModelMap model, @PathVariable("jobName") String jobName,
+	                                  @RequestParam(defaultValue = "0") int start,
+	                                  @RequestParam(defaultValue = "20") int pageSize) {
+		int totalHistories = service.countExecutionHistory(jobName);
+		List<JobHistoryDTO> histories = service.listExecutionHistory(jobName, start, pageSize);
+		model.addAttribute("jobName", jobName);
+		model.addAttribute("histories", histories);
+		model.addAttribute("startHistory", start == 0 && totalHistories > 0 ? start + 1 : start);
+		model.addAttribute("endHistory", start + histories.size());
+		model.addAttribute("totalHistories", totalHistories);
+		if ((start + histories.size()) < totalHistories) {
+			model.addAttribute("next", start + histories.size());
+		}
+		if (start > 0) {
+			model.addAttribute("previous", start - pageSize);
+		}
+		return "history";
 	}
 
 	public void setService(MyJobsService service) {
