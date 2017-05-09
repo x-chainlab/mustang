@@ -1,6 +1,6 @@
 package com.dimogo.open.myjobs.types;
 
-import com.dimogo.open.myjobs.dispatch.NotificationDispatcher;
+import com.dimogo.open.myjobs.notification.NotificationProcessor;
 import com.dimogo.open.myjobs.servlet.ApplicationContextCatcher;
 
 import java.util.Map;
@@ -9,21 +9,25 @@ import java.util.Map;
  * Created by Ethan Xiao on 2017/4/15.
  */
 public enum NotificationType {
-	RunJob("runJobDispatcher"),
-	StopJob,
+	RunJob("runJobProcessor", true, false, false),
+	StopJob("stopJobProcessor", false, false, true),
+	PauseTrigger("pauseTriggerProcessor", true, true, false),
+	ResumeTrigger("resumeTriggerProcessor", true, true, false),
 	;
 
-	private NotificationDispatcher dispatcher;
+	private NotificationProcessor dispatcher;
+	private boolean forMaster;
+	private boolean forAllSlaves;
+	private boolean needLock;
 
-	NotificationType() {
-
+	NotificationType(String dispatcherName, boolean needLock, boolean forMaster, boolean forAllSlaves) {
+		this.dispatcher = (NotificationProcessor) ApplicationContextCatcher.getInstance().get().getBean(dispatcherName);
+		this.needLock = needLock;
+		this.forAllSlaves = forAllSlaves;
+		this.forMaster = forMaster;
 	}
 
-	NotificationType(String dispatcherName) {
-		this.dispatcher = (NotificationDispatcher) ApplicationContextCatcher.getInstance().get().getBean(dispatcherName);
-	}
-
-	NotificationType(NotificationDispatcher dispatcher) {
+	NotificationType(NotificationProcessor dispatcher) {
 		this.dispatcher = dispatcher;
 	}
 
@@ -32,5 +36,17 @@ public enum NotificationType {
 			return;
 		}
 		dispatcher.dispatch(paras);
+	}
+
+	public boolean isNeedLock() {
+		return needLock;
+	}
+
+	public boolean isForMaster() {
+		return forMaster;
+	}
+
+	public boolean isForAllSlaves() {
+		return forAllSlaves;
 	}
 }

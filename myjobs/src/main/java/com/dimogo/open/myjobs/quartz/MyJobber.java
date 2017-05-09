@@ -26,7 +26,7 @@ public class MyJobber implements Job {
 		message.put(NotificationParaType.JobName.name(), jobName);
 
 		try {
-			JobUtils.sendJobNotification(jobName, NotificationType.RunJob.name(), message);
+			JobUtils.sendJobNotification(jobName, NotificationType.RunJob.name(), message, null);
 		} catch (Exception e) {
 			throw new JobExecutionException(e.getMessage(), e);
 		}

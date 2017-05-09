@@ -4,6 +4,8 @@ import com.alibaba.fastjson.JSON;
 import com.dimogo.open.myjobs.dto.*;
 import com.dimogo.open.myjobs.exception.JobRegisterException;
 import com.dimogo.open.myjobs.manager.admin.service.MyJobsService;
+import com.dimogo.open.myjobs.types.NotificationParaType;
+import com.dimogo.open.myjobs.types.NotificationType;
 import com.dimogo.open.myjobs.utils.ID;
 import com.dimogo.open.myjobs.utils.JobUtils;
 import com.dimogo.open.myjobs.utils.ListUtils;
@@ -14,6 +16,7 @@ import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.MapUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.zookeeper.CreateMode;
+import org.quartz.JobExecutionException;
 
 import java.util.*;
 
@@ -50,8 +53,12 @@ public class MyJobsServiceImpl implements MyJobsService {
 			Integer instances = zkClient.readData(ZKUtils.buildJobInstancesPath(job), true);
 			String cron = zkClient.readData(ZKUtils.buildJobCronPath(job), true);
 			String paras = zkClient.readData(ZKUtils.buildJobParasPath(job), true);
+			boolean pauseTrigger = zkClient.exists(ZKUtils.buildJobPauseTrigger(job));
+			boolean exists = zkClient.exists(ZKUtils.buildJobPath(job));
 
 			ClusteredJobInfo jobInfo = new ClusteredJobInfo();
+			jobInfo.setExists(exists);
+			jobInfo.setPauseTrigger(pauseTrigger);
 			jobInfo.setJobName(job);
 			jobInfo.setExecutors(executors);
 			jobInfo.setExecutions(executions);
@@ -153,8 +160,10 @@ public class MyJobsServiceImpl implements MyJobsService {
 		Integer instances = zkClient.readData(ZKUtils.buildJobInstancesPath(jobName), true);
 		String cron = zkClient.readData(ZKUtils.buildJobCronPath(jobName), true);
 		String paras = zkClient.readData(ZKUtils.buildJobParasPath(jobName), true);
+		boolean pauseTrigger = zkClient.exists(ZKUtils.buildJobPauseTrigger(jobName));
 
 		ClusteredJobInfo jobInfo = new ClusteredJobInfo();
+		jobInfo.setPauseTrigger(pauseTrigger);
 		jobInfo.setExists(exists);
 		jobInfo.setJobName(jobName);
 		jobInfo.setExecutors(executors);
@@ -255,4 +264,52 @@ public class MyJobsServiceImpl implements MyJobsService {
 		masterInfo.setId(masterId.toString());
 		return masterInfo;
 	}
+
+	public void stopJob(String jobName) {
+		Map<String, String> message = new LinkedHashMap<String, String>();
+		message.put(NotificationParaType.NotificationType.name(), NotificationType.StopJob.name());
+		message.put(NotificationParaType.JobName.name(), jobName);
+
+		try {
+			List<String> jobExecutions = zkClient.getChildren(ZKUtils.buildJobExecutionsPath(jobName));
+			Set<String> jobExecutors = new HashSet<String>(jobExecutions.size());
+			for (String execution : jobExecutions) {
+				JobExecutionDTO executionDTO = zkClient.readData(ZKUtils.buildJobExecutionPath(jobName, execution), true);
+				if (executionDTO == null) {
+					continue;
+				}
+				jobExecutors.add(executionDTO.getExecutorId());
+			}
+			JobUtils.sendJobNotification(jobName, NotificationType.StopJob.name(), message, jobExecutors);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+	public void pauseTrigger(String jobName) {
+		Map<String, String> message = new LinkedHashMap<String, String>();
+		message.put(NotificationParaType.NotificationType.name(), NotificationType.PauseTrigger.name());
+		message.put(NotificationParaType.JobName.name(), jobName);
+
+		try {
+			JobUtils.sendJobNotification(jobName, NotificationType.PauseTrigger.name(), message, null);
+			zkClient.create(ZKUtils.buildJobPauseTrigger(jobName), null, CreateMode.PERSISTENT);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+	public void resumeTrigger(String jobName) {
+		Map<String, String> message = new LinkedHashMap<String, String>();
+		message.put(NotificationParaType.NotificationType.name(), NotificationType.ResumeTrigger.name());
+		message.put(NotificationParaType.JobName.name(), jobName);
+
+		try {
+			JobUtils.sendJobNotification(jobName, NotificationType.ResumeTrigger.name(), message, null);
+			zkClient.deleteRecursive(ZKUtils.buildJobPauseTrigger(jobName));
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
 }

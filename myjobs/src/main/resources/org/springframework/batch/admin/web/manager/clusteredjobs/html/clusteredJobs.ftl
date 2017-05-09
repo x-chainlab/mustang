@@ -11,6 +11,7 @@
 					<th>Executors</th>
 					<th>Executions</th>
 					<th>Instance&nbsp;Limit</th>
+                    <th>Trigger&nbsp;Status</th>
 					<th>Cron&nbsp;Expression</th>
 					<th>Parameters</th>
 				</tr>
@@ -26,6 +27,7 @@
 						<td>${job.executors}</td>
 						<td>${job.executions}</td>
 						<td>${job.maxInstances}</td>
+                        <td><#if job.pauseTrigger>Paused<#else>Normal</#if></td>
 						<td>${job.cron}</td>
 						<td>${job.paras}</td>
 					</tr>

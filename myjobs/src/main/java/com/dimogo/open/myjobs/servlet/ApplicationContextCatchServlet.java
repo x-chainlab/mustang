@@ -28,8 +28,8 @@ public class ApplicationContextCatchServlet extends HttpServlet {
 		Thread slaveThread = new Thread(MyJobSlave.getInstance());
 		Thread monitorThread = new Thread(ExecutorResourceMonitor.getInstance());
 		Thread executorThread = new Thread(MyJobExecutor.getInstance());
-		executorThread.start();
 		masterThread.start();
+		executorThread.start();
 		slaveThread.start();
 		monitorThread.start();
 	}

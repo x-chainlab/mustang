@@ -88,10 +88,19 @@
 		<property name="transactionManager" ref="transactionManager"/>
 	</bean>
 
-	<bean id="runJobDispatcher" class="com.dimogo.open.myjobs.dispatch.RunJobDispatcher">
+	<bean id="runJobProcessor" class="com.dimogo.open.myjobs.notification.RunJobProcessor">
 		<property name="jobLocator" ref="jobRegistry" />
 		<property name="jobLauncher" ref="jobLauncher" />
 		<property name="jobRepository" ref="jobRepository" />
+	</bean>
+
+	<bean id="stopJobProcessor" class="com.dimogo.open.myjobs.notification.StopJobProcessor">
+	</bean>
+
+	<bean id="pauseTriggerProcessor" class="com.dimogo.open.myjobs.notification.PauseTriggerProcessor">
+	</bean>
+
+	<bean id="resumeTriggerProcessor" class="com.dimogo.open.myjobs.notification.ResumeTriggerProcessor">
 	</bean>
 
 	<bean id="jobBuilderFactory" class="org.springframework.batch.core.configuration.annotation.JobBuilderFactory">
