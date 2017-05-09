@@ -9,15 +9,22 @@
         <param-name>contextConfigLocation</param-name>
         <param-value>classpath*:/org/springframework/batch/admin/web/resources/webapp-config.xml</param-value>
     </context-param>
-
     <listener>
-        <listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
+    <listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
     </listener>
 
     <listener>
         <listener-class>com.dimogo.open.myjobs.listener.InitSystemListener</listener-class>
     </listener>
+    <filter>
+        <filter-name>springSecurityFilterChain</filter-name>
+        <filter-class>org.springframework.web.filter.DelegatingFilterProxy</filter-class>
+    </filter>
 
+    <filter-mapping>
+        <filter-name>springSecurityFilterChain</filter-name>
+        <url-pattern>/*</url-pattern>
+    </filter-mapping>
     <filter>
         <filter-name>shallowEtagHeaderFilter</filter-name>
         <filter-class>org.springframework.web.filter.ShallowEtagHeaderFilter</filter-class>
