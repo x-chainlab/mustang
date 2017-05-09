@@ -1,4 +1,4 @@
-package com.dimogo.open.myjobs.dispatch;
+package com.dimogo.open.myjobs.notification;
 
 import com.dimogo.open.myjobs.types.NotificationParaType;
 import org.springframework.batch.core.Job;
@@ -19,7 +19,7 @@ import java.util.Map;
 /**
  * Created by Ethan Xiao on 2017/4/18.
  */
-public class RunJobDispatcher implements NotificationDispatcher {
+public class RunJobProcessor implements NotificationProcessor {
 
 	private JobLocator jobLocator;
 	private JobLauncher jobLauncher;

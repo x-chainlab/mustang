@@ -2,13 +2,20 @@ package com.dimogo.open.myjobs.utils;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
+import com.gs.collections.api.list.ImmutableList;
 import org.I0Itec.zkclient.ZkClient;
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.zookeeper.CreateMode;
+import org.apache.zookeeper.Op;
+import org.apache.zookeeper.OpResult;
+import org.apache.zookeeper.data.ACL;
+import org.apache.zookeeper.data.Id;
+import org.apache.zookeeper.data.Stat;
 import org.springframework.batch.core.JobParameter;
 import org.springframework.batch.core.JobParameters;
 
-import java.util.Map;
+import java.util.*;
 
 /**
  * Created by Ethan Xiao on 2017/4/7.
@@ -78,10 +85,24 @@ public class JobUtils {
 		}
 	}
 
-	public static void sendJobNotification(String job, String notification, Object data) throws Exception {
+	public static void sendJobNotification(String job, String notification, Object data, Collection<String> slaves) throws Exception {
 		ZkClient zkClient = ZKUtils.newClient();
 		try {
-			zkClient.create(ZKUtils.buildNotificationPath(notification), data, CreateMode.PERSISTENT_SEQUENTIAL);
+			if (CollectionUtils.isEmpty(slaves)) {
+				zkClient.create(ZKUtils.buildNotificationPath(notification), data, CreateMode.PERSISTENT_SEQUENTIAL);
+				return;
+			}
+			Map.Entry<List<ACL>, Stat> entry = zkClient.getAcl(ZKUtils.Path.Notifications.build());
+			List<ACL> acl = entry.getKey();
+			List<Op> ops = new ArrayList<Op>(slaves.size() + 2);
+			byte[] notificationData = data == null ? null : ZKUtils.getSerializableSerializer().serialize(data);
+			notification = notification + "_" + job + "_" + ((int)(Math.random() * 100000));
+			ops.add(Op.create(ZKUtils.buildNotificationPath(notification), notificationData, acl, CreateMode.PERSISTENT));
+			ops.add(Op.create(ZKUtils.buildNotificationSlavesPath(notification), null, acl, CreateMode.PERSISTENT));
+			for (String slave : slaves) {
+				ops.add(Op.create(ZKUtils.buildNotificationSlavePath(notification, slave), null, acl, CreateMode.PERSISTENT));
+			}
+			zkClient.multi(ops);
 		} finally {
 			zkClient.close();
 		}

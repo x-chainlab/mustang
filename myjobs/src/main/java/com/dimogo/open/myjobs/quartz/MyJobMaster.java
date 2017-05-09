@@ -53,7 +53,7 @@ public class MyJobMaster implements Runnable {
 
 	private void schedule(ZkClient zkClient) throws SchedulerException {
 		System.out.println("master startup");
-		Scheduler scheduler = new StdSchedulerFactory().getScheduler();
+		Scheduler scheduler = SchedulerManager.getInstance().start();
 		try {
 			scheduler.start();
 			while (true) {
@@ -76,6 +76,10 @@ public class MyJobMaster implements Runnable {
 
 				if (CollectionUtils.isNotEmpty(jobNames)) {
 					for (String jobName : jobNames) {
+						if (zkClient.exists(ZKUtils.buildJobPauseTrigger(jobName))) {
+							//paused trigger
+							continue;
+						}
 						String cronExpression = zkClient.readData(ZKUtils.buildJobCronPath(jobName), true);
 						try {
 							if (StringUtils.isBlank(cronExpression)) {

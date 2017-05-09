@@ -35,4 +35,10 @@ public interface MyJobsService {
 
 	MasterInfo findMaster();
 
+	void stopJob(String jobName);
+
+	void pauseTrigger(String jobName);
+
+	void resumeTrigger(String jobName);
+
 }
