@@ -7,6 +7,7 @@
 	
 			<table title="Job Execution History" class="bordered-table">
 				<tr>
+                    <th>Executor</th>
 					<th>Start</th>
 					<th>End</th>
 					<th>Status</th>
@@ -19,6 +20,7 @@
 						<#assign rowClass="name-sublevel1-odd"/>
 					</#if>
 					<tr class="${rowClass}">
+                        <td><#if history.executorId??>${history.executorId}</#if></td>
 						<td>${history.start?string("yyyy-MM-dd HH:mm:ss")}</td>
                         <td>${history.end?string("yyyy-MM-dd HH:mm:ss")}</td>
                         <td>${history.status.name()!}</td>

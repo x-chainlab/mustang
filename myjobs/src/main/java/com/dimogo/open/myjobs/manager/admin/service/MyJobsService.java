@@ -45,4 +45,6 @@ public interface MyJobsService {
 
 	int countExecutionHistory(String jobName);
 
+	void cleanExecutionHistory(String jobName);
+
 }

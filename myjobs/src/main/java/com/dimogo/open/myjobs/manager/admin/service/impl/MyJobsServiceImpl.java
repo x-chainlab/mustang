@@ -22,6 +22,8 @@ import java.util.*;
  */
 public class MyJobsServiceImpl implements MyJobsService {
 
+	private static ExecutionHistoryComparator executionHistoryComparator = new ExecutionHistoryComparator();
+
 	private ZkClient zkClient;
 
 	public MyJobsServiceImpl() {
@@ -337,6 +339,7 @@ public class MyJobsServiceImpl implements MyJobsService {
 		if (CollectionUtils.isEmpty(histories)) {
 			return new ArrayList<JobHistoryDTO>(0);
 		}
+		Collections.sort(histories, executionHistoryComparator);
 		List<String> notifications = ListUtils.subList(histories, start, start + pageSize);
 		if (CollectionUtils.isEmpty(notifications)) {
 			return new ArrayList<JobHistoryDTO>(0);
@@ -361,6 +364,21 @@ public class MyJobsServiceImpl implements MyJobsService {
 			}
 			e.printStackTrace();
 			throw new RuntimeException("count history error", e);
+		}
+	}
+
+	public void cleanExecutionHistory(String jobName) {
+		try {
+			zkClient.deleteRecursive(ZKUtils.buildJobHistoriesPath(jobName));
+		} catch (Throwable e) {
+			e.printStackTrace();
+		}
+	}
+
+	private static class ExecutionHistoryComparator implements Comparator<String> {
+
+		public int compare(String o1, String o2) {
+			return o1.compareToIgnoreCase(o2) < 0 ? 1 : -1;
 		}
 	}
 }

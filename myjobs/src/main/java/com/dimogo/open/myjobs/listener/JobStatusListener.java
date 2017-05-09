@@ -58,8 +58,10 @@ public class JobStatusListener implements JobExecutionListener {
 				jobHistoryDTO.setEnd(jobExecution.getEndTime());
 				jobHistoryDTO.setStatus(jobExecution.getStatus());
 				jobHistoryDTO.setExitStatus(jobExecution.getExitStatus());
+				jobHistoryDTO.setExecutorId(ID.ExecutorID.toString());
+				String historyId = jobName + "_" + jobHistoryDTO.getStart().getTime();
 				ZKUtils.create(zkClient, ZKUtils.buildJobHistoriesPath(jobName), null, CreateMode.PERSISTENT);
-				ZKUtils.create(zkClient, ZKUtils.buildJobHistoryPath(jobName, executionId.toString()), jobHistoryDTO, CreateMode.PERSISTENT);
+				ZKUtils.create(zkClient, ZKUtils.buildJobHistoryPath(jobName, historyId), jobHistoryDTO, CreateMode.PERSISTENT);
 				zkClient.close();
 			} catch (Throwable e) {
 				e.printStackTrace();

@@ -18,6 +18,7 @@
         <#assign delete_url><@spring.url relativeUrl="${servletPath}/deleteclusteredjob/${jobInfo.jobName}/"/></#assign>
         <#assign stop_url><@spring.url relativeUrl="${servletPath}/stopclusteredjob/${jobInfo.jobName}/"/></#assign>
         <#assign history_url><@spring.url relativeUrl="${servletPath}/history/${jobInfo.jobName}/"/></#assign>
+        <#assign clean_history_url><@spring.url relativeUrl="${servletPath}/cleanhistory/${jobInfo.jobName}/"/></#assign>
         <form id="detailForm" action="${details_url}" method="POST" enctype="application/x-www-form-urlencoded">
             <ol>
                 <li><label for="jobName">Job Name</label><input readonly type="text" name="jobName" id="jobName" value="${jobInfo.jobName}">
@@ -36,6 +37,9 @@
                 <#if jobInfo.exists>
                     <li><label>Settings</label><input id="saveSettings" type="submit" value="Save Settings"/>
                         <input type="hidden" name="origin" value="clusteredjob"/>
+                    </li>
+                    <li><label>Execution History</label><input id="executionHistory" type="button" value="Clean History"
+                                                               onclick="location.href='${clean_history_url}'"/>
                     </li>
                     <li><label for="deleteThisJob">Delete Config</label><input id="deleteThisJob" type="button" value="Delete Job"
                                                                                onclick="location.href='${delete_url}'"/></li>

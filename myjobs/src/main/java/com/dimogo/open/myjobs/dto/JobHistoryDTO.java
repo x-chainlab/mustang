@@ -10,10 +10,19 @@ import java.util.Date;
  * Created by ethanx on 2017/5/8.
  */
 public class JobHistoryDTO implements Serializable {
+	private String executorId;
 	private Date start;
 	private Date end;
 	private BatchStatus status;
 	private ExitStatus exitStatus;
+
+	public String getExecutorId() {
+		return executorId;
+	}
+
+	public void setExecutorId(String executorId) {
+		this.executorId = executorId;
+	}
 
 	public Date getStart() {
 		return start;

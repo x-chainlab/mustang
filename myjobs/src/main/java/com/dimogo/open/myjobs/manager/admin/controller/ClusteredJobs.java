@@ -115,6 +115,12 @@ public class ClusteredJobs {
 		return "history";
 	}
 
+	@RequestMapping(value = "/cleanhistory/{jobName}/", method = RequestMethod.GET)
+	public String cleanExecutionHistory(ModelMap model, @PathVariable("jobName") String jobName) {
+		service.cleanExecutionHistory(jobName);
+		return getClusteredJob(model, jobName);
+	}
+
 	public void setService(MyJobsService service) {
 		this.service = service;
 	}
