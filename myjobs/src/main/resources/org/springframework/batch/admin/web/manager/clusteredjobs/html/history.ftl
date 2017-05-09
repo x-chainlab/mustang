@@ -3,7 +3,7 @@
 	
 	<#if histories?? && histories?size!=0>
 		
-			<h2>Job Execution History:</h2>
+			<h2>Job Execution History:${jobName}</h2>
 	
 			<table title="Job Execution History" class="bordered-table">
 				<tr>
