@@ -17,6 +17,9 @@
 	<bean class="com.dimogo.open.myjobs.manager.admin.controller.Notifications">
         <property name="service" ref="clusteredJobService" />
     </bean>
+	<bean class="com.dimogo.open.myjobs.manager.admin.controller.Admin">
+		<property name="service" ref="clusteredJobService" />
+	</bean>
 
 	<bean id="clusteredJobService" class="com.dimogo.open.myjobs.manager.admin.service.impl.MyJobsServiceImpl" />
 </beans>

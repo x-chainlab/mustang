@@ -8,6 +8,16 @@
 	<bean class="com.dimogo.open.myjobs.manager.admin.menu.Master" parent="baseMenu"/>
 	<bean class="com.dimogo.open.myjobs.manager.admin.menu.Notifications" parent="baseMenu"/>
 
+	<bean name="index" parent="standard">
+		<property name="attributes">
+			<props merge="true">
+				<prop key="body">/manager/admin/html/index.ftl</prop>
+				<prop key="titleCode">myjobs.login.title</prop>
+				<prop key="titleText">MyJobs Batch Admin: User Login</prop>
+			</props>
+		</property>
+	</bean>
+
 	<bean name="executors" parent="standard">
 		<property name="attributes">
 			<props merge="true">
