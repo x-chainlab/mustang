@@ -2,21 +2,18 @@ package com.dimogo.open.myjobs.manager.admin.service.impl;
 
 import com.alibaba.fastjson.JSON;
 import com.dimogo.open.myjobs.dto.*;
-import com.dimogo.open.myjobs.exception.JobRegisterException;
 import com.dimogo.open.myjobs.manager.admin.service.MyJobsService;
 import com.dimogo.open.myjobs.types.NotificationParaType;
 import com.dimogo.open.myjobs.types.NotificationType;
-import com.dimogo.open.myjobs.utils.ID;
 import com.dimogo.open.myjobs.utils.JobUtils;
 import com.dimogo.open.myjobs.utils.ListUtils;
 import com.dimogo.open.myjobs.utils.ZKUtils;
 import org.I0Itec.zkclient.ZkClient;
-import org.I0Itec.zkclient.exception.ZkNodeExistsException;
+import org.I0Itec.zkclient.exception.ZkNoNodeException;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.MapUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.zookeeper.CreateMode;
-import org.quartz.JobExecutionException;
 
 import java.util.*;
 
@@ -24,6 +21,8 @@ import java.util.*;
  * Created by Ethan Xiao on 2017/4/19.
  */
 public class MyJobsServiceImpl implements MyJobsService {
+
+	private static ExecutionHistoryComparator executionHistoryComparator = new ExecutionHistoryComparator();
 
 	private ZkClient zkClient;
 
@@ -55,6 +54,12 @@ public class MyJobsServiceImpl implements MyJobsService {
 			String paras = zkClient.readData(ZKUtils.buildJobParasPath(job), true);
 			boolean pauseTrigger = zkClient.exists(ZKUtils.buildJobPauseTrigger(job));
 			boolean exists = zkClient.exists(ZKUtils.buildJobPath(job));
+			int historyCount = 0;
+			try {
+				historyCount = zkClient.countChildren(ZKUtils.buildJobHistoriesPath(job));
+			} catch (Throwable e) {
+				e.printStackTrace();
+			}
 
 			ClusteredJobInfo jobInfo = new ClusteredJobInfo();
 			jobInfo.setExists(exists);
@@ -62,6 +67,7 @@ public class MyJobsServiceImpl implements MyJobsService {
 			jobInfo.setJobName(job);
 			jobInfo.setExecutors(executors);
 			jobInfo.setExecutions(executions);
+			jobInfo.setHistoryCount(historyCount);
 			if (instances != null) {
 				jobInfo.setMaxInstances(instances);
 			}
@@ -161,6 +167,12 @@ public class MyJobsServiceImpl implements MyJobsService {
 		String cron = zkClient.readData(ZKUtils.buildJobCronPath(jobName), true);
 		String paras = zkClient.readData(ZKUtils.buildJobParasPath(jobName), true);
 		boolean pauseTrigger = zkClient.exists(ZKUtils.buildJobPauseTrigger(jobName));
+		int historyCount = 0;
+		try {
+			historyCount = zkClient.countChildren(ZKUtils.buildJobHistoriesPath(jobName));
+		} catch (Throwable e) {
+			e.printStackTrace();
+		}
 
 		ClusteredJobInfo jobInfo = new ClusteredJobInfo();
 		jobInfo.setPauseTrigger(pauseTrigger);
@@ -168,6 +180,7 @@ public class MyJobsServiceImpl implements MyJobsService {
 		jobInfo.setJobName(jobName);
 		jobInfo.setExecutors(executors);
 		jobInfo.setExecutions(executions);
+		jobInfo.setHistoryCount(historyCount);
 		if (instances != null) {
 			jobInfo.setMaxInstances(instances);
 		}
@@ -312,4 +325,60 @@ public class MyJobsServiceImpl implements MyJobsService {
 		}
 	}
 
+	public List<JobHistoryDTO> listExecutionHistory(String jobName, int start, int pageSize) {
+		List<String> histories = null;
+		try {
+			histories = zkClient.getChildren(ZKUtils.buildJobHistoriesPath(jobName));
+		} catch (Throwable e) {
+			if (e instanceof ZkNoNodeException) {
+				return new ArrayList<JobHistoryDTO>(0);
+			}
+			e.printStackTrace();
+			throw new RuntimeException("get history ndoes error", e);
+		}
+		if (CollectionUtils.isEmpty(histories)) {
+			return new ArrayList<JobHistoryDTO>(0);
+		}
+		Collections.sort(histories, executionHistoryComparator);
+		List<String> notifications = ListUtils.subList(histories, start, start + pageSize);
+		if (CollectionUtils.isEmpty(notifications)) {
+			return new ArrayList<JobHistoryDTO>(0);
+		}
+		List<JobHistoryDTO> historyList = new ArrayList<JobHistoryDTO>(notifications.size());
+		for (String history : histories) {
+			JobHistoryDTO historyDTO = zkClient.readData(ZKUtils.buildJobHistoryPath(jobName, history), true);
+			if (historyDTO == null) {
+				continue;
+			}
+			historyList.add(historyDTO);
+		}
+		return historyList;
+	}
+
+	public int countExecutionHistory(String jobName) {
+		try {
+			return zkClient.countChildren(ZKUtils.buildJobHistoriesPath(jobName));
+		} catch (Throwable e) {
+			if (e instanceof ZkNoNodeException) {
+				return 0;
+			}
+			e.printStackTrace();
+			throw new RuntimeException("count history error", e);
+		}
+	}
+
+	public void cleanExecutionHistory(String jobName) {
+		try {
+			zkClient.deleteRecursive(ZKUtils.buildJobHistoriesPath(jobName));
+		} catch (Throwable e) {
+			e.printStackTrace();
+		}
+	}
+
+	private static class ExecutionHistoryComparator implements Comparator<String> {
+
+		public int compare(String o1, String o2) {
+			return o1.compareToIgnoreCase(o2) < 0 ? 1 : -1;
+		}
+	}
 }

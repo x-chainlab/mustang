@@ -11,6 +11,7 @@
 					<th>Executors</th>
 					<th>Executions</th>
 					<th>Instance&nbsp;Limit</th>
+					<th>History</th>
                     <th>Trigger&nbsp;Status</th>
 					<th>Cron&nbsp;Expression</th>
 					<th>Parameters</th>
@@ -23,10 +24,12 @@
 					</#if>
 					<tr class="${rowClass}">
 						<#assign job_url><@spring.url relativeUrl="${servletPath}/clusteredjob/${job.jobName}/"/></#assign>
+						<#assign history_url><@spring.url relativeUrl="${servletPath}/history/${job.jobName}/"/></#assign>
 						<td><a href="${job_url}">${job.jobName}</a></td>
 						<td>${job.executors}</td>
 						<td>${job.executions}</td>
 						<td>${job.maxInstances}</td>
+						<td><a href="${history_url}">${job.historyCount}</a></td>
                         <td><#if job.pauseTrigger>Paused<#else>Normal</#if></td>
 						<td>${job.cron}</td>
 						<td>${job.paras}</td>

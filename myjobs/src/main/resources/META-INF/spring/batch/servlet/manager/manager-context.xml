@@ -68,5 +68,15 @@
 		</property>
 	</bean>
 
+	<bean name="history" parent="standard">
+		<property name="attributes">
+			<props merge="true">
+				<prop key="body">/manager/clusteredjobs/html/history.ftl</prop>
+				<prop key="titleCode">myjobs.history.title</prop>
+				<prop key="titleText">MyJobs Batch Admin: Job Execution History</prop>
+			</props>
+		</property>
+	</bean>
+
 </beans>
 

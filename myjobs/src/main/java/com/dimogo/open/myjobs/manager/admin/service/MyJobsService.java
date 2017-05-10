@@ -41,4 +41,10 @@ public interface MyJobsService {
 
 	void resumeTrigger(String jobName);
 
+	List<JobHistoryDTO> listExecutionHistory(String jobName, int start, int pageSize);
+
+	int countExecutionHistory(String jobName);
+
+	void cleanExecutionHistory(String jobName);
+
 }
