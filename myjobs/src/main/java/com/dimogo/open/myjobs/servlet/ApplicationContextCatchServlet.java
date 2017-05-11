@@ -4,6 +4,8 @@ import com.dimogo.open.myjobs.quartz.MyJobExecutor;
 import com.dimogo.open.myjobs.quartz.MyJobMaster;
 import com.dimogo.open.myjobs.quartz.MyJobSlave;
 import com.dimogo.open.myjobs.sys.ExecutorResourceMonitor;
+import com.dimogo.open.myjobs.utils.ZKUtils;
+import org.I0Itec.zkclient.ZkClient;
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.context.support.WebApplicationContextUtils;
 
@@ -32,6 +34,9 @@ public class ApplicationContextCatchServlet extends HttpServlet {
 		executorThread.start();
 		slaveThread.start();
 		monitorThread.start();
+
+		ZkClient zkClient = ZKUtils.newClient();
+		ZKUtils.initSupperUser(zkClient);
 	}
 
 	@Override

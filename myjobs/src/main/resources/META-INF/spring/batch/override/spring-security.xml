@@ -11,7 +11,7 @@
         <intercept-url pattern="/**" access="hasRole('ADMIN')" />
         <logout invalidate-session="true" logout-url="/logout" logout-success-url="/index"/>
         <form-login login-page="/index" login-processing-url="/login" authentication-failure-url="/index?error=loginFailure"
-                    default-target-url="/index"/>
+                    default-target-url="/jobs"/>
         <csrf disabled="true"/>
     </http>
 

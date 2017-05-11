@@ -1,5 +1,6 @@
 package com.dimogo.open.myjobs.utils;
 
+import com.dimogo.open.myjobs.dto.UserDTO;
 import com.dimogo.open.myjobs.sys.Config;
 import org.I0Itec.zkclient.ZkClient;
 import org.I0Itec.zkclient.exception.ZkNodeExistsException;
@@ -23,6 +24,7 @@ public class ZKUtils {
 		Notifications("/notifications", MyJobs),
 		Master("/master", MyJobs),
 		MasterNode("/node", Master),
+		Users("/users", MyJobs),
 		;
 
 		private String path;
@@ -132,6 +134,24 @@ public class ZKUtils {
 
 	public static String buildJobInstancesPath(String job) {
 		return buildJobPath(job) + "/instances";
+	}
+
+	public static String buildUserPath(String userName) {
+		return Path.Users.build() + "/" + userName;
+	}
+
+	public static void initSupperUser(ZkClient zkClient) {
+		try {
+			create(zkClient, Path.Users.build(), null, CreateMode.PERSISTENT);
+			UserDTO user = new UserDTO();
+			user.setUserName("admin");
+			user.setPassword("admin");
+			user.setRole("ROLE_SUPPER");
+			create(zkClient, buildUserPath(user.getUserName()), user, CreateMode.PERSISTENT);
+		} catch (Exception e) {
+			e.printStackTrace();
+			return;
+		}
 	}
 
 	public static int countJobExecutions(ZkClient zkClient, String job) {

@@ -47,4 +47,10 @@ public interface MyJobsService {
 
 	void cleanExecutionHistory(String jobName);
 
+	boolean updateUser(String userName, String password, List<String> roles);
+
+	void deleteUser(String userName);
+
+	UserDTO findUser(String userName);
+
 }

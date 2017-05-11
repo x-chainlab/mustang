@@ -10,6 +10,7 @@ import com.dimogo.open.myjobs.utils.ListUtils;
 import com.dimogo.open.myjobs.utils.ZKUtils;
 import org.I0Itec.zkclient.ZkClient;
 import org.I0Itec.zkclient.exception.ZkNoNodeException;
+import org.I0Itec.zkclient.exception.ZkNodeExistsException;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.MapUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -373,6 +374,31 @@ public class MyJobsServiceImpl implements MyJobsService {
 		} catch (Throwable e) {
 			e.printStackTrace();
 		}
+	}
+
+	public boolean updateUser(String userName, String password, List<String> roles) {
+		UserDTO user = new UserDTO();
+		user.setUserName(userName);
+		user.setPassword(password);
+		user.setRoles(roles);
+		try {
+			zkClient.create(ZKUtils.buildUserPath(user.getUserName()), user, CreateMode.PERSISTENT);
+			return true;
+		} catch (ZkNodeExistsException e) {
+			zkClient.writeData(ZKUtils.buildUserPath(user.getUserName()), user);
+			return true;
+		} catch (Throwable e) {
+			e.printStackTrace();
+			return false;
+		}
+	}
+
+	public void deleteUser(String userName) {
+		zkClient.deleteRecursive(ZKUtils.buildUserPath(userName));
+	}
+
+	public UserDTO findUser(String userName) {
+		return zkClient.readData(ZKUtils.buildUserPath(userName), true);
 	}
 
 	private static class ExecutionHistoryComparator implements Comparator<String> {
