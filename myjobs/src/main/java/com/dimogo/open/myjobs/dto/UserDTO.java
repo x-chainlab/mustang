@@ -1,12 +1,13 @@
 package com.dimogo.open.myjobs.dto;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
 /**
  * Created by ethanx on 2017/5/11.
  */
-public class UserDTO {
+public class UserDTO implements Serializable {
 	private String userName;
 	private String password;
 	private List<String> roles;
