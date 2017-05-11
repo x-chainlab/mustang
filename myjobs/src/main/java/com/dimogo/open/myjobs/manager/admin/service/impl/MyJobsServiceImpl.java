@@ -340,12 +340,12 @@ public class MyJobsServiceImpl implements MyJobsService {
 			return new ArrayList<JobHistoryDTO>(0);
 		}
 		Collections.sort(histories, executionHistoryComparator);
-		List<String> notifications = ListUtils.subList(histories, start, start + pageSize);
-		if (CollectionUtils.isEmpty(notifications)) {
+		List<String> selectedHistories = ListUtils.subList(histories, start, start + pageSize);
+		if (CollectionUtils.isEmpty(selectedHistories)) {
 			return new ArrayList<JobHistoryDTO>(0);
 		}
-		List<JobHistoryDTO> historyList = new ArrayList<JobHistoryDTO>(notifications.size());
-		for (String history : histories) {
+		List<JobHistoryDTO> historyList = new ArrayList<JobHistoryDTO>(selectedHistories.size());
+		for (String history : selectedHistories) {
 			JobHistoryDTO historyDTO = zkClient.readData(ZKUtils.buildJobHistoryPath(jobName, history), true);
 			if (historyDTO == null) {
 				continue;
