@@ -5,7 +5,10 @@ import com.dimogo.open.myjobs.dto.ClusteredJobInfo;
 import com.dimogo.open.myjobs.dto.ExecutorInfo;
 import com.dimogo.open.myjobs.dto.JobHistoryDTO;
 import com.dimogo.open.myjobs.manager.admin.service.MyJobsService;
+import com.dimogo.open.myjobs.types.UserRoleType;
+import com.dimogo.open.myjobs.utils.AuthUtils;
 import com.dimogo.open.myjobs.utils.JobUtils;
+import org.springframework.security.web.servletapi.SecurityContextHolderAwareRequestWrapper;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.*;
@@ -21,8 +24,9 @@ public class ClusteredJobs {
 	private MyJobsService service;
 
 	@RequestMapping(value = "/clusteredjobs", method = RequestMethod.GET)
-	public String clusteredJobs(ModelMap model, @RequestParam(defaultValue = "0") int startJob,
-	                        @RequestParam(defaultValue = "20") int pageSize) {
+	public String clusteredJobs(ModelMap model, SecurityContextHolderAwareRequestWrapper request, @RequestParam(defaultValue = "0") int startJob,
+	                            @RequestParam(defaultValue = "20") int pageSize) {
+		AuthUtils.setClusterAuthentication(request, model);
 		int totalJobs = service.countJobs();
 		List<ClusteredJobInfo> jobs = service.listJobs(startJob, pageSize);
 		model.addAttribute("jobs", jobs);
@@ -39,7 +43,8 @@ public class ClusteredJobs {
 	}
 
 	@RequestMapping(value = "/clusteredjob/{jobName}/", method = RequestMethod.GET)
-	public String getClusteredJob(ModelMap model, @PathVariable String jobName) {
+	public String getClusteredJob(ModelMap model, SecurityContextHolderAwareRequestWrapper request, @PathVariable String jobName) {
+		AuthUtils.setClusterAuthentication(request, model);
 		ClusteredJobInfo job = service.findJob(jobName);
 		model.addAttribute("jobInfo", job);
 		model.addAttribute("jobParameters", JobUtils.jsonToParameterList(JSON.parseObject(job.getParas())));
@@ -50,6 +55,7 @@ public class ClusteredJobs {
 
 	@RequestMapping(value = "/clusteredjob/{jobName}/", method = RequestMethod.POST)
 	public String setClusteredJob(ModelMap model, @RequestParam("jobName") String jobName,
+	                              SecurityContextHolderAwareRequestWrapper request,
 	                              @RequestParam("cron") String cron,
 	                              @RequestParam("maxInstances") int maxInstances,
 	                              @RequestParam("paras") String paras) {
@@ -59,11 +65,12 @@ public class ClusteredJobs {
 		job.setMaxInstances(maxInstances);
 		job.setParas(paras);
 		service.updateJob(job);
-		return getClusteredJob(model, jobName);
+		return getClusteredJob(model, request, jobName);
 	}
 
 	@RequestMapping(value = "/deleteclusteredjob/{jobName}", method = RequestMethod.GET)
-	public String deleteClusteredJob(ModelMap model, @PathVariable("jobName") String jobName) {
+	public String deleteClusteredJob(ModelMap model, SecurityContextHolderAwareRequestWrapper request, @PathVariable("jobName") String jobName) {
+		AuthUtils.setClusterAuthentication(request, model);
 		ClusteredJobInfo job = service.findJob(jobName);
 		model.addAttribute("jobInfo", job);
 		model.addAttribute("jobParameters", JobUtils.jsonToParameterList(JSON.parseObject(job.getParas())));
@@ -77,28 +84,30 @@ public class ClusteredJobs {
 	}
 
 	@RequestMapping(value = "/pausejobtrigger/{jobName}", method = RequestMethod.GET)
-	public String pauseJobTrigger(ModelMap model, @PathVariable("jobName") String jobName) {
+	public String pauseJobTrigger(ModelMap model, SecurityContextHolderAwareRequestWrapper request, @PathVariable("jobName") String jobName) {
 		service.pauseTrigger(jobName);
-		return getClusteredJob(model, jobName);
+		return getClusteredJob(model, request, jobName);
 	}
 
 	@RequestMapping(value = "/resumejobtrigger/{jobName}", method = RequestMethod.GET)
-	public String resumeJobTrigger(ModelMap model, @PathVariable("jobName") String jobName) {
+	public String resumeJobTrigger(ModelMap model, SecurityContextHolderAwareRequestWrapper request, @PathVariable("jobName") String jobName) {
 		service.resumeTrigger(jobName);
-		return getClusteredJob(model, jobName);
+		return getClusteredJob(model, request, jobName);
 	}
 
 	@RequestMapping(value = "/stopclusteredjob/{jobName}", method = RequestMethod.GET)
-	public String stopClusteredJob(ModelMap model, @PathVariable("jobName") String jobName) {
+	public String stopClusteredJob(ModelMap model, SecurityContextHolderAwareRequestWrapper request, @PathVariable("jobName") String jobName) {
 		service.stopJob(jobName);
 		model.addAttribute("stopJob", true);
-		return getClusteredJob(model, jobName);
+		return getClusteredJob(model, request, jobName);
 	}
 
 	@RequestMapping(value = "/history/{jobName}", method = RequestMethod.GET)
 	public String getExecutionHistory(ModelMap model, @PathVariable("jobName") String jobName,
+	                                  SecurityContextHolderAwareRequestWrapper request,
 	                                  @RequestParam(defaultValue = "0") int start,
 	                                  @RequestParam(defaultValue = "20") int pageSize) {
+		AuthUtils.setClusterAuthentication(request, model);
 		int totalHistories = service.countExecutionHistory(jobName);
 		List<JobHistoryDTO> histories = service.listExecutionHistory(jobName, start, pageSize);
 		model.addAttribute("jobName", jobName);
@@ -116,9 +125,9 @@ public class ClusteredJobs {
 	}
 
 	@RequestMapping(value = "/cleanhistory/{jobName}/", method = RequestMethod.GET)
-	public String cleanExecutionHistory(ModelMap model, @PathVariable("jobName") String jobName) {
+	public String cleanExecutionHistory(ModelMap model, SecurityContextHolderAwareRequestWrapper request, @PathVariable("jobName") String jobName) {
 		service.cleanExecutionHistory(jobName);
-		return getClusteredJob(model, jobName);
+		return getClusteredJob(model, request, jobName);
 	}
 
 	public void setService(MyJobsService service) {

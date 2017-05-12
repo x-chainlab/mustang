@@ -2,6 +2,8 @@ package com.dimogo.open.myjobs.manager.admin.controller;
 
 import com.dimogo.open.myjobs.dto.MasterInfo;
 import com.dimogo.open.myjobs.manager.admin.service.MyJobsService;
+import com.dimogo.open.myjobs.utils.AuthUtils;
+import org.springframework.security.web.servletapi.SecurityContextHolderAwareRequestWrapper;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -16,7 +18,8 @@ public class Master {
 	private MyJobsService service;
 
 	@RequestMapping(value = "/master", method = RequestMethod.GET)
-	public String executors(ModelMap model) {
+	public String executors(ModelMap model, SecurityContextHolderAwareRequestWrapper request) {
+		AuthUtils.setClusterAuthentication(request, model);
 		MasterInfo masterInfo = service.findMaster();
 		model.addAttribute("master", masterInfo);
 		return "master";

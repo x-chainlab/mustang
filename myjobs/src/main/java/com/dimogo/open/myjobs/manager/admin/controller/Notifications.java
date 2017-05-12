@@ -2,6 +2,8 @@ package com.dimogo.open.myjobs.manager.admin.controller;
 
 import com.dimogo.open.myjobs.dto.NotificationInfo;
 import com.dimogo.open.myjobs.manager.admin.service.MyJobsService;
+import com.dimogo.open.myjobs.utils.AuthUtils;
+import org.springframework.security.web.servletapi.SecurityContextHolderAwareRequestWrapper;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -20,7 +22,9 @@ public class Notifications {
 
 	@RequestMapping(value = "/notifications", method = RequestMethod.GET)
 	public String executors(ModelMap model, @RequestParam(defaultValue = "0") int start,
+	                        SecurityContextHolderAwareRequestWrapper request,
 	                        @RequestParam(defaultValue = "20") int pageSize) {
+		AuthUtils.setClusterAuthentication(request, model);
 		int totalNotifications = service.countNotifications();
 		List<NotificationInfo> notifications = service.listNotifications(start, pageSize);
 		model.addAttribute("notifications", notifications);

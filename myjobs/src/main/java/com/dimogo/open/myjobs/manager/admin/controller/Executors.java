@@ -3,6 +3,8 @@ package com.dimogo.open.myjobs.manager.admin.controller;
 import com.dimogo.open.myjobs.dto.ExecutorDetails;
 import com.dimogo.open.myjobs.dto.ExecutorInfo;
 import com.dimogo.open.myjobs.manager.admin.service.MyJobsService;
+import com.dimogo.open.myjobs.utils.AuthUtils;
+import org.springframework.security.web.servletapi.SecurityContextHolderAwareRequestWrapper;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -21,8 +23,9 @@ public class Executors {
 	private MyJobsService service;
 
 	@RequestMapping(value = "/executors", method = RequestMethod.GET)
-	public String executors(ModelMap model, @RequestParam(defaultValue = "0") int start,
+	public String executors(ModelMap model, SecurityContextHolderAwareRequestWrapper request, @RequestParam(defaultValue = "0") int start,
 	                        @RequestParam(defaultValue = "20") int pageSize) {
+		AuthUtils.setClusterAuthentication(request, model);
 		int totalExecutors = service.countExecutors();
 		List<ExecutorInfo> executors = service.listExecutors(start, pageSize);
 		model.addAttribute("executors", executors);
@@ -39,7 +42,8 @@ public class Executors {
 	}
 
 	@RequestMapping(value = "/executor/{executorId}/")
-	public String executor(ModelMap model, @PathVariable("executorId") String executorId) {
+	public String executor(ModelMap model, SecurityContextHolderAwareRequestWrapper request, @PathVariable("executorId") String executorId) {
+		AuthUtils.setClusterAuthentication(request, model);
 		ExecutorDetails details = service.findExecutor(executorId);
 		model.addAttribute("executor", details);
 		if (details.getRuntime() != null) {

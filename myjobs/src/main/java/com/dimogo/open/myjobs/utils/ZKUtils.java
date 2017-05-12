@@ -2,6 +2,7 @@ package com.dimogo.open.myjobs.utils;
 
 import com.dimogo.open.myjobs.dto.UserDTO;
 import com.dimogo.open.myjobs.sys.Config;
+import com.dimogo.open.myjobs.types.UserRoleType;
 import org.I0Itec.zkclient.ZkClient;
 import org.I0Itec.zkclient.exception.ZkNodeExistsException;
 import org.I0Itec.zkclient.serialize.SerializableSerializer;
@@ -146,7 +147,7 @@ public class ZKUtils {
 			UserDTO user = new UserDTO();
 			user.setUserName("admin");
 			user.setPassword("admin");
-			user.setRole("ROLE_SUPPER");
+			user.setRole(UserRoleType.ROLE_SUPPER.name());
 			create(zkClient, buildUserPath(user.getUserName()), user, CreateMode.PERSISTENT);
 		} catch (Exception e) {
 			e.printStackTrace();
