@@ -192,8 +192,8 @@ mustang是一个后端批处理任务调度集成项目，主要目的是提供�
         <servlet-class>com.dimogo.open.myjobs.servlet.ApplicationContextCatchServlet</servlet-class>
         <load-on-startup>1</load-on-startup>
     </servlet>
-</web-app>
-```
+	</web-app>
+	```
 
 - pom.xml
 
@@ -250,5 +250,5 @@ mustang是一个后端批处理任务调度集成项目，主要目的是提供�
         </dependency>
    </dependencies>
 
-</project>
+	</project>
 	```
