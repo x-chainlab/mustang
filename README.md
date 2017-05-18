@@ -98,40 +98,39 @@ mustang是一个后端批处理任务调度集成项目，主要目的是提供�
 ---
 - maven配置
 
-	```
-    <repositories>
-        <repository>
-            <id>mvn</id>
-            <url>http://repo.spring.io/release/</url>
-        </repository>
-        <repository>
-            <id>dimogo</id>
-            <url>http://mvn.dimogo.com:10010/repository/dimogo/</url>
-        </repository>
-    </repositories>
-	```
+```
+<repositories>
+    <repository>
+        <id>mvn</id>
+        <url>http://repo.spring.io/release/</url>
+    </repository>
+    <repository>
+        <id>dimogo</id>
+        <url>http://mvn.dimogo.com:10010/repository/dimogo/</url>
+    </repository>
+</repositories>
+```
 
 - resource/conf/sys.properties
 	
-	```
-	#zookeeper配置
-	zk.servers=<ZooKeeper节点列表>
-	zk.conn.timeout=10000
-	zk.session.timeout=10000
-	#集群节点资源更新间隔时间(毫秒)
-	executor.monitor.interval=300000
-	```
+```
+#zookeeper配置
+zk.servers=<ZooKeeper节点列表>
+zk.conn.timeout=10000
+zk.session.timeout=10000
+#集群节点资源更新间隔时间(毫秒)
+executor.monitor.interval=300000
+```
 	
 - WEB-INF/web.xml
 	
-	```
-	<?xml version="1.0" encoding="ISO-8859-1"?>
+```
+<?xml version="1.0" encoding="ISO-8859-1"?>
 <web-app xmlns="http://java.sun.com/xml/ns/j2ee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="
 			http://java.sun.com/xml/ns/j2ee
 			http://java.sun.com/xml/ns/j2ee/web-app_2_4.xsd" version="2.4">
     <display-name>Batch Console</display-name>
-
     <context-param>
         <param-name>contextConfigLocation</param-name>
         <param-value>classpath*:/org/springframework/batch/admin/web/resources/webapp-config.xml</param-value>
@@ -139,7 +138,6 @@ mustang是一个后端批处理任务调度集成项目，主要目的是提供�
     <listener>
     <listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
     </listener>
-
     <listener>
         <listener-class>com.dimogo.open.myjobs.listener.InitSystemListener</listener-class>
     </listener>
@@ -147,7 +145,6 @@ mustang是一个后端批处理任务调度集成项目，主要目的是提供�
         <filter-name>springSecurityFilterChain</filter-name>
         <filter-class>org.springframework.web.filter.DelegatingFilterProxy</filter-class>
     </filter>
-
     <filter-mapping>
         <filter-name>springSecurityFilterChain</filter-name>
         <url-pattern>/*</url-pattern>
@@ -156,22 +153,18 @@ mustang是一个后端批处理任务调度集成项目，主要目的是提供�
         <filter-name>shallowEtagHeaderFilter</filter-name>
         <filter-class>org.springframework.web.filter.ShallowEtagHeaderFilter</filter-class>
     </filter>
-
     <filter>
         <filter-name>hiddenHttpMethodFilter</filter-name>
         <filter-class>org.springframework.web.filter.HiddenHttpMethodFilter</filter-class>
     </filter>
-
     <filter-mapping>
         <filter-name>shallowEtagHeaderFilter</filter-name>
         <url-pattern>/*</url-pattern>
     </filter-mapping>
-
     <filter-mapping>
         <filter-name>hiddenHttpMethodFilter</filter-name>
         <url-pattern>/*</url-pattern>
     </filter-mapping>
-
     <servlet>
         <servlet-name>Batch Servlet</servlet-name>
         <servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
@@ -181,41 +174,36 @@ mustang是一个后端批处理任务调度集成项目，主要目的是提供�
         </init-param>
         <load-on-startup>1</load-on-startup>
     </servlet>
-
     <servlet-mapping>
         <servlet-name>Batch Servlet</servlet-name>
         <url-pattern>/*</url-pattern>
     </servlet-mapping>
-
     <servlet>
         <servlet-name>Application Context Catch Servlet</servlet-name>
         <servlet-class>com.dimogo.open.myjobs.servlet.ApplicationContextCatchServlet</servlet-class>
         <load-on-startup>1</load-on-startup>
     </servlet>
-	</web-app>
-	```
+</web-app>
+```
 
 - pom.xml
 
-	```
-	<?xml version="1.0" encoding="UTF-8"?>
+```
+<?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0"
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
-
     <groupId>com.dimogo.open.test</groupId>
     <artifactId>batch</artifactId>
     <version>1.0-SNAPSHOT</version>
     <packaging>war</packaging>
-
     <properties>
         <spring.batch.admin.version>2.0.0.M1</spring.batch.admin.version>
         <druid.version>1.0.9</druid.version>
         <mybatis.version>3.2.8</mybatis.version>
         <mybatis.spring.version>1.2.2</mybatis.spring.version>
     </properties>
-
     <repositories>
         <repository>
             <id>mvn</id>
@@ -226,7 +214,6 @@ mustang是一个后端批处理任务调度集成项目，主要目的是提供�
             <url>http://mvn.dimogo.com:10010/repository/dimogo/</url>
         </repository>
     </repositories>
-
     <dependencies>
         <dependency>
             <groupId>com.dimogo.open.mustang</groupId>
@@ -249,6 +236,5 @@ mustang是一个后端批处理任务调度集成项目，主要目的是提供�
             <version>${spring.batch.admin.version}</version>
         </dependency>
    </dependencies>
-
-	</project>
-	```
+</project>
+```
