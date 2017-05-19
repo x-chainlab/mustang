@@ -54,6 +54,25 @@ mustang是一个后端批处理任务调度集成项目，主要目的是提供�
 
 	为了安全而增加的用户认证，待完善。
 
+使用方法
+---
+- 创建项目
+
+	Job项目可以是jar包，也可以是war包。war包直接部署到web服务器，jar包可以用依懒或其他方式部署到web服务器中，增加如下配置文件:
+	+ resource/conf/sys.properties
+	+ WEB-INF/web.xml
+	+ pom.xm（如果需要)
+	
+- 依懒列表(maven group:artifact:version)
+	+ com.dimogo.open.mustang:myjobs:1.5
+	+ org.springframework.batch:spring-batch-admin-manager:2.0.0.M1
+	+ org.springframework.batch:spring-batch-admin-resources:2.0.0.M1
+	+ org.springframework.batch:spring-batch-admin-domain:2.0.0.M1
+	
+- Maven仓库
+
+	引入myjobs时需要配置dimogo的仓库，仓库地址为：http://mvn.dimogo.com:10010/repository/dimogo/
+
 版本历史
 ---
 - 1.5 （当前版本）
@@ -75,25 +94,6 @@ mustang是一个后端批处理任务调度集成项目，主要目的是提供�
 - 1.0
 
 	集成Spring Batch Admin。
-
-使用方法
----
-- 创建项目
-
-	Job项目可以是jar包，也可以是war包。war包直接部署到web服务器，jar包可以用依懒或其他方式部署到web服务器中，增加如下配置文件:
-	+ resource/conf/sys.properties
-	+ WEB-INF/web.xml
-	+ pom.xm（如果需要)
-	
-- 依懒列表(maven group:artifact:version)
-	+ com.dimogo.open.mustang:myjobs:1.5
-	+ org.springframework.batch:spring-batch-admin-manager:2.0.0.M1
-	+ org.springframework.batch:spring-batch-admin-resources:2.0.0.M1
-	+ org.springframework.batch:spring-batch-admin-domain:2.0.0.M1
-	
-- Maven仓库
-
-	引入myjobs时需要配置dimogo的仓库，仓库地址为：http://mvn.dimogo.com:10010/repository/dimogo/
 
 配置与文件
 ---
