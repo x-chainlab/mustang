@@ -17,15 +17,15 @@ mustang是一个后端批处理任务调度集成项目，主要目的是提供�
 ---
 - batchconsole
 
-	用于开发调试的web模块，将其部署到web服务器中启动，在浏览器中访问服务器即可进入Spring Batch Admin，例如：http://localhost:8080.
+	用于开发调试的web模块，将其部署到web服务器中启动，在浏览器中访问服务器即可进入Spring Batch Admin，例如：http://localhost:8080
 
 - hello-jar
 
-	开发调试的jar包，用于测试以jar包方式发布自定义job。
+	用于开发调试的jar包，用于测试以jar包方式发布自定义job。
 
 - myjobs
 
-	基于Spring Batch Admin的扩展，实现集群管理、任务调度、用户认证等功能。
+	基于Spring Batch Admin 2.0.0.M1的扩展，实现集群管理、任务调度、用户认证等功能，在你的项目中应该自行引入Spring Batch和Spring Batch Admin相关依懒，以及myjobs.jar即可！
 	
 <span id="3">功能介绍</span>
 ---
