@@ -15,12 +15,14 @@ import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.MapUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.zookeeper.CreateMode;
+import org.springframework.stereotype.Service;
 
 import java.util.*;
 
 /**
  * Created by Ethan Xiao on 2017/4/19.
  */
+@Service("clusteredJobService")
 public class MyJobsServiceImpl implements MyJobsService {
 
 	private static ExecutionHistoryComparator executionHistoryComparator = new ExecutionHistoryComparator();
@@ -399,6 +401,20 @@ public class MyJobsServiceImpl implements MyJobsService {
 
 	public UserDTO findUser(String userName) {
 		return zkClient.readData(ZKUtils.buildUserPath(userName), true);
+	}
+
+	public List<User2DTO> listUsers() {
+		List<String> userNames = zkClient.getChildren(ZKUtils.Path.Users.build());
+		List<User2DTO> users = new ArrayList<User2DTO>(userNames.size());
+		for (String userName : userNames) {
+			UserDTO userDTO = findUser(userName);
+			User2DTO user2DTO = new User2DTO();
+			user2DTO.setUsername(userDTO.getUserName());
+			user2DTO.setPassword(userDTO.getPassword());
+			user2DTO.setRoles(userDTO.getRoles().toString());
+			users.add(user2DTO);
+		}
+		return users;
 	}
 
 	private static class ExecutionHistoryComparator implements Comparator<String> {

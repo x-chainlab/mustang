@@ -7,8 +7,18 @@
 	<bean class="com.dimogo.open.myjobs.manager.admin.menu.Executors" parent="baseMenu"/>
 	<bean class="com.dimogo.open.myjobs.manager.admin.menu.Master" parent="baseMenu"/>
 	<bean class="com.dimogo.open.myjobs.manager.admin.menu.Notifications" parent="baseMenu"/>
+	<!--<bean class="com.dimogo.open.myjobs.manager.admin.menu.UpdatePassword" parent="baseMenu"/>-->
+	<!--<bean class="com.dimogo.open.myjobs.manager.admin.menu.UserList" parent="baseMenu"/>-->
 	<bean class="com.dimogo.open.myjobs.manager.admin.menu.Logout" parent="baseMenu"/>
-
+	<bean name="update" parent="standard">
+		<property name="attributes">
+			<props merge="true">
+				<prop key="body">/manager/admin/html/update.ftl</prop>
+				<prop key="titleCode">myjobs.user.title</prop>
+				<prop key="titleText">MyJobs Batch Admin: Update User</prop>
+			</props>
+		</property>
+	</bean>
 	<bean name="index" parent="standard">
 		<property name="attributes">
 			<props merge="true">

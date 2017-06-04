@@ -115,5 +115,4 @@
 	<task:scheduled-tasks>
 		<task:scheduled ref="jobService" method="removeInactiveExecutions" fixed-delay="${batch.job.service.reaper.interval}"/>
 	</task:scheduled-tasks>
-
 </beans>

@@ -8,7 +8,7 @@ import org.springframework.batch.admin.web.resources.BaseMenu;
 public class Logout extends BaseMenu {
 
 	public Logout() {
-		super("/logout", "Logout", 9);
+		super("/logout", "Logout", 11);
 	}
 
 }

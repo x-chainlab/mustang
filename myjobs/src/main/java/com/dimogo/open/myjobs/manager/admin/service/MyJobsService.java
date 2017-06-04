@@ -53,4 +53,6 @@ public interface MyJobsService {
 
 	UserDTO findUser(String userName);
 
+	List<User2DTO> listUsers();
+
 }

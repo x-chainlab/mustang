@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import javax.annotation.Resource;
 import java.util.List;
 
 /**
@@ -19,7 +20,7 @@ import java.util.List;
  */
 @Controller
 public class Executors {
-
+	@Resource(name = "clusteredJobService")
 	private MyJobsService service;
 
 	@RequestMapping(value = "/executors", method = RequestMethod.GET)
