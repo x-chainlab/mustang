@@ -8,6 +8,15 @@
 	<bean class="com.dimogo.open.myjobs.manager.admin.menu.Master" parent="baseMenu"/>
 	<bean class="com.dimogo.open.myjobs.manager.admin.menu.Notifications" parent="baseMenu"/>
 	<bean class="com.dimogo.open.myjobs.manager.admin.menu.Logout" parent="baseMenu"/>
+	<bean name="notPermitted" parent="standard">
+		<property name="attributes">
+			<props merge="true">
+				<prop key="body">/manager/admin/html/notpermitted.ftl</prop>
+				<prop key="titleCode">myjobs.not.permitted</prop>
+				<prop key="titleText">MyJobs Batch Admin: Operation Not Permitted</prop>
+			</props>
+		</property>
+	</bean>
 	<bean name="userDetail" parent="standard">
 		<property name="attributes">
 			<props merge="true">

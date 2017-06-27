@@ -15,14 +15,15 @@
     <#else>
         <p>There is no master registered.</p>
     </#if>
-    <h2>Update Password </h2>
+    <h2>Update My Password </h2>
     <form action="/updateUserPassword" method="post">
         <ol>
             <li><label for="username">User Name</label><input  readonly="readonly" id="username" name="username" type="text" value="${username}"></li>
             <li><label for="password">New Password</label><input id="password" name="password" type="password" value=""></li>
-            <li><input type="submit" value="Change Password"></li>
+            <li><input type="submit" value="Update My Password"></li>
         </ol>
     </form>
+    <#if isClusterSupper>
     <h2>Add User </h2>
     <form action="/addUser" method="post">
         <ol>
@@ -32,7 +33,8 @@
            <li><input type="submit" value="Add User"></li>
         </ol>
     </form>
-    <#if users?? && users?size!=0>
+    </#if>
+    <#if isClusterSupper && users?? && users?size!=0>
 
         <h2>User List</h2>
 

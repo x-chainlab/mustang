@@ -10,17 +10,7 @@ import org.springframework.ui.ModelMap;
 public class AuthUtils {
 
 	public static void setClusterAuthentication(SecurityContextHolderAwareRequestWrapper request, ModelMap model) {
-		if (request.isUserInRole(UserRoleType.ROLE_SUPPER.name())) {
-			model.addAttribute("isClusterAdmin", true);
-			model.addAttribute("isClusterSupper", true);
-			return;
-		}
-		if (request.isUserInRole(UserRoleType.ROLE_CLUSTER_ADMIN.name())) {
-			model.addAttribute("clusterAdmin", true);
-			model.addAttribute("isClusterSupper", false);
-			return;
-		}
-		model.addAttribute("clusterAdmin", false);
-		model.addAttribute("isClusterSupper", false);
+		model.addAttribute("isClusterAdmin", request.isUserInRole(UserRoleType.ROLE_CLUSTER_ADMIN.getAlias()));
+		model.addAttribute("isClusterSupper", request.isUserInRole(UserRoleType.ROLE_SUPPER.getAlias()));
 	}
 }

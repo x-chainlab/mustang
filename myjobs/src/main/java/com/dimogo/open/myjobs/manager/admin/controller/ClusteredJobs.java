@@ -2,10 +2,8 @@ package com.dimogo.open.myjobs.manager.admin.controller;
 
 import com.alibaba.fastjson.JSON;
 import com.dimogo.open.myjobs.dto.ClusteredJobInfo;
-import com.dimogo.open.myjobs.dto.ExecutorInfo;
 import com.dimogo.open.myjobs.dto.JobHistoryDTO;
 import com.dimogo.open.myjobs.manager.admin.service.MyJobsService;
-import com.dimogo.open.myjobs.types.UserRoleType;
 import com.dimogo.open.myjobs.utils.AuthUtils;
 import com.dimogo.open.myjobs.utils.JobUtils;
 import org.springframework.security.web.servletapi.SecurityContextHolderAwareRequestWrapper;

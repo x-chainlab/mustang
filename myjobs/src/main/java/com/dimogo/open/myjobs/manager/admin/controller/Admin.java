@@ -31,6 +31,11 @@ public class Admin {
 		return "index";
 	}
 
+	@RequestMapping(value = "/notpermitted", method = RequestMethod.GET)
+	public String notPermitted() {
+		return "notPermitted";
+	}
+
 	public void setService(MyJobsService service) {
 		this.service = service;
 	}
