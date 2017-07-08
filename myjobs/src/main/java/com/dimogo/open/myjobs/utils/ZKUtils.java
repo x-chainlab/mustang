@@ -6,12 +6,15 @@ import com.dimogo.open.myjobs.types.UserRoleType;
 import org.I0Itec.zkclient.ZkClient;
 import org.I0Itec.zkclient.exception.ZkNodeExistsException;
 import org.I0Itec.zkclient.serialize.SerializableSerializer;
+import org.apache.log4j.Logger;
 import org.apache.zookeeper.CreateMode;
 
 /**
  * Created by Ethan Xiao on 2017/4/6.
  */
 public class ZKUtils {
+
+	private static final Logger logger = Logger.getLogger(ZKUtils.class);
 
 	private static class SerializableSerializerHolder {
 		private static SerializableSerializer serializableSerializer = new SerializableSerializer();
@@ -150,7 +153,9 @@ public class ZKUtils {
 			user.setRole(UserRoleType.ROLE_SUPPER.name());
 			create(zkClient, buildUserPath(user.getUserName()), user, CreateMode.PERSISTENT);
 		} catch (Exception e) {
-			e.printStackTrace();
+			if (logger.isDebugEnabled()) {
+				logger.debug(e);
+			}
 			return;
 		}
 	}
