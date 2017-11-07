@@ -28,8 +28,7 @@ public class ZKUtils {
 		Notifications("/notifications", MyJobs),
 		Master("/master", MyJobs),
 		MasterNode("/node", Master),
-		Users("/users", MyJobs),
-		;
+		Users("/users", MyJobs),;
 
 		private String path;
 		private Path parent;
@@ -189,25 +188,23 @@ public class ZKUtils {
 		}
 
 		public boolean tryLock(String lockPath, String lockedPath, long timeout) {
-			try {
-				final long exp = timeout > 0 ? System.currentTimeMillis() + timeout : -1;
-				while (exp == -1 || System.currentTimeMillis() < exp) {
-					try {
-						create(zkClient, lockPath, null, CreateMode.PERSISTENT);
-						zkClient.createEphemeral(lockedPath, ID.ExecutorID);
-						return true;
-					} catch (Throwable e) {
-						if (e instanceof ZkNodeExistsException) {
-							zkClient.watchForChilds(lockPath);
-							continue;
-						}
-						throw e;
-					}
+			final long exp = timeout > 0 ? System.currentTimeMillis() + timeout : -1;
+			while (exp == -1 || System.currentTimeMillis() < exp) {
+				try {
+					create(zkClient, lockPath, null, CreateMode.PERSISTENT);
+					zkClient.createEphemeral(lockedPath, ID.ExecutorID);
+					return true;
+				} catch (ZkNodeExistsException e) {
+					zkClient.watchForChilds(lockPath);
+					continue;
+				} catch (InterruptedException e) {
+					break;
+				} catch (Throwable e) {
+					//throw e;
+					continue;
 				}
-				return false;
-			} catch (Throwable e) {
-				throw new RuntimeException("trying to lock path " + lockPath + " exception", e);
 			}
+			return false;
 		}
 	}
 
