@@ -6,12 +6,10 @@ import com.dimogo.open.myjobs.utils.ID;
 import com.dimogo.open.myjobs.utils.ZKUtils;
 import org.I0Itec.zkclient.ZkClient;
 import org.I0Itec.zkclient.exception.ZkNoNodeException;
-import org.I0Itec.zkclient.exception.ZkNodeExistsException;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.MapUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
-import org.apache.zookeeper.KeeperException;
 
 import java.util.List;
 import java.util.Map;
@@ -19,6 +17,7 @@ import java.util.UUID;
 import java.util.concurrent.BlockingQueue;
 
 /**
+ * 处理当前Slave节点的通知，执行JOB
  * Created by Ethan Xiao on 2017/4/18.
  */
 public class MyJobDispatcher implements Runnable {
@@ -122,6 +121,7 @@ public class MyJobDispatcher implements Runnable {
 		if (notificationType.isForAllSlaves()) {
 			return forAllSlaves(zkClient, notificationType, notification, paras);
 		}
+		//处理JOB通知
 		notificationType.dispatch(paras);
 		return true;
 	}

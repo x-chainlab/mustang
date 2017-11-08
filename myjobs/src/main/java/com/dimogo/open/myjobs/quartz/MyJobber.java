@@ -12,6 +12,8 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 /**
+ * Master节点的Quartz Job，当Master节点上观察到有Spring Batch Job需要执行时，通过MyJobber向ZK发送启动通知。
+ * 每个Spring Batch Job都有在Master节点进行计划，由Quartz定时唤醒，由Slave处理通知。
  * Created by Ethan Xiao on 2017/4/15.
  */
 public class MyJobber implements Job {

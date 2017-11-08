@@ -15,6 +15,8 @@ import java.util.List;
 import java.util.Set;
 
 /**
+ * Master节点，在集群中需要竞争产生。
+ * 主要任务是在Master节点上按配置计划触发Spring Batch Job，当有JOB需要触发时即向ZK发送通知，由Slave节点负责处理通知、执行JOB。
  * Created by Ethan Xiao on 2017/4/13.
  */
 public class MyJobMaster implements Runnable {

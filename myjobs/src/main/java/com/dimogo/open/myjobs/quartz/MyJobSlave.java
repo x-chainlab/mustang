@@ -10,7 +10,7 @@ import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 
 /**
- * Job Slave负责分发、执行Job，每个实例都是slave角色
+ * Job Slave负责处理JOB通知，每个实例都是slave角色
  * Created by Ethan Xiao on 2017/4/17.
  */
 public class MyJobSlave implements Runnable {
