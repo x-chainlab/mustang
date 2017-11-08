@@ -6,6 +6,7 @@ import com.dimogo.open.myjobs.servlet.ApplicationContextCatcher;
 import java.util.Map;
 
 /**
+ * Slave节点处理的通知类型
  * Created by Ethan Xiao on 2017/4/15.
  */
 public enum NotificationType {
