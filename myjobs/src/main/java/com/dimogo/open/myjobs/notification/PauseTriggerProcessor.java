@@ -9,6 +9,7 @@ import org.quartz.SchedulerException;
 import java.util.Map;
 
 /**
+ * 暂停Trigger的通知处理器
  * Created by ethanx on 2017/5/4.
  */
 public class PauseTriggerProcessor implements NotificationProcessor {

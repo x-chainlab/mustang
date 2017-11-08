@@ -18,6 +18,7 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 /**
+ * 启动JOB的通知处理器
  * Created by Ethan Xiao on 2017/4/18.
  */
 public class RunJobProcessor implements NotificationProcessor {
