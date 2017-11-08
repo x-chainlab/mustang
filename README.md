@@ -98,7 +98,11 @@ mustang是一个后端批处理任务调度集成项目，主要目的是提供�
 
 <span id="5">版本历史</span>
 ---
-- 1.7.1 (当前版本)
+- 1.7.2 (当前版本)
+
+	解决placeholderProperties加载自定义配置文件的问题，将自定义的properties文件放在resource/conf目录下即可。
+
+- 1.7.1
 
 	处理ZK可能的异常问题，保持ZK连接，使JOB任务可持续执行。
 	
