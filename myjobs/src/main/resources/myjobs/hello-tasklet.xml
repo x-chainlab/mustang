@@ -14,5 +14,7 @@
         </step>
     </job>
 
-    <bean id="helloTasklet" class="com.dimogo.open.myjobs.test.HelloTasklet"/>
+    <bean id="helloTasklet" class="com.dimogo.open.myjobs.test.HelloTasklet">
+        <property name="message" value="${hello.tasklet.message}"/>
+    </bean>
 </beans>
