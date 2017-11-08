@@ -74,7 +74,7 @@ mustang是一个后端批处理任务调度集成项目，主要目的是提供�
 	+ pom.xm（如果需要)
 	
 - 依懒列表(maven group:artifact:version)
-	+ com.dimogo.open.mustang:myjobs:1.5
+	+ com.dimogo.open.mustang:myjobs:<latest>
 	+ org.springframework.batch:spring-batch-admin-manager:2.0.0.M1
 	+ org.springframework.batch:spring-batch-admin-resources:2.0.0.M1
 	+ org.springframework.batch:spring-batch-admin-domain:2.0.0.M1
