@@ -12,7 +12,7 @@ mustang - 批处理任务集群扩展
 
 <span id="1">简介</span>
 ---
-mustang是一个后端批处理任务调度集成项目，主要目的是提供简单的批处理任务管理、调度功能。本项目基于Spring Batch Admin扩展而成，集群中所有信息存放在zookeeper中。每个节点都是Slave，其中一个执行器会成为Master。当前Master掉线后会有另一个Slave成为Master。目前还比较粗糙，欢迎大牛参与改进！我的QQ: 308056554
+mustang是一个后端批处理任务调度集成项目，主要目的是提供简单的批处理任务管理、调度功能。本项目基于Spring Batch Admin扩展而成，集群中所有信息存放在zookeeper中。每个节点都是Slave，其中一个执行器会成为Master。当前Master掉线后会有另一个Slave成为Master。目前还比较粗糙，欢迎大牛参与改进！
 	
 <span id="2">源码结构说明</span>
 ---
